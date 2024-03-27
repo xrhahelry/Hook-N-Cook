@@ -13,7 +13,6 @@ options.add_argument("--headless=new")
 
 service = Service(executable_path="chromedriver.exe")
 driver = webdriver.Chrome(service=service, options=options)
-driver.maximize_window()
 
 driver.get("https://daraz.com.np")
 
