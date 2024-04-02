@@ -37,7 +37,7 @@ try:
     ).find_elements(By.TAG_NAME, "img")
 except:
     images = driver.find_element(
-        By.XPATH, '//*[@id="root"]/div/div[3]/div/div/div[1]/div[2]'
+        By.XPATH, '//*[@id="root"]/div/div[3]/divrdiv/div[1]/div[2]'
     ).find_elements(By.TAG_NAME, "img")
 
 titles = driver.find_elements(By.XPATH, '//*[@id="id-title"]')
