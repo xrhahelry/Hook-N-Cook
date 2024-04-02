@@ -1,7 +1,3 @@
-import time
-
-t = time.time()
-
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
@@ -10,8 +6,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 # query = input("What to look for: ")
-query = "laptop"
-info = []
+query = "lotion"
 
 options = webdriver.ChromeOptions()
 options.add_argument("--headless=new")
@@ -28,10 +23,14 @@ input_element.send_keys(str(query) + Keys.ENTER)
 
 search_results = driver.find_elements(By.XPATH, '//*[@id="id-a-link"]')
 urls = [x.get_property("href") for x in search_results]
-for url in urls:
+for i in range(0, len(urls)):
+    url = urls[i]
     details = []
+    details.append(i + 1)
     details.append(url)
+
     driver.get(url)
+
     WebDriverWait(driver, 1).until(
         EC.presence_of_element_located(
             (
@@ -44,21 +43,26 @@ for url in urls:
         By.XPATH, '//*[@id="J_breadcrumb"]/li[1]/span/a/span'
     )
     details.append(category.text)
+
     sub_category = driver.find_element(
         By.XPATH, '//*[@id="J_breadcrumb"]/li[2]/span/a/span'
     )
     details.append(sub_category.text)
+
     type = driver.find_element(By.XPATH, '//*[@id="J_breadcrumb"]/li[3]/span/a/span')
     details.append(type.text)
+
     name = driver.find_element(
         By.XPATH, '//*[@id="module_product_title_1"]/div/div/span'
     )
     details.append(name.text)
+
     try:
         actual_price = driver.find_element(
             By.XPATH, '//*[@id="module_product_price_1"]/div/div/div/span[1]'
         )
         details.append(actual_price.text)
+
         discount_price = driver.find_element(
             By.XPATH, '//*[@id="module_product_price_1"]/div/div/span'
         )
@@ -69,6 +73,7 @@ for url in urls:
         )
         details.append(actual_price.text)
         details.append(actual_price.text)
+
     driver.execute_script("window.scrollTo(0, 300)")
     WebDriverWait(driver, 1).until(
         EC.presence_of_element_located(
@@ -83,14 +88,13 @@ for url in urls:
         '//*[@id="module_product_review"]/div/div/div[2]/div[1]/div[1]/div[1]/span[1]',
     )
     details.append(score.text)
+
     reviews = driver.find_element(
         By.XPATH, '//*[@id="module_product_review"]/div/div/div[2]/div[1]/div[1]/div[3]'
     )
     details.append(reviews.text)
+
     print(details)
     print(" ")
 
 driver.quit()
-
-
-print("time taken: ", time.time() - t)
