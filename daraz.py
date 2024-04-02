@@ -6,7 +6,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 # query = input("What to look for: ")
-query = "lotion"
+query = "laptop"
 
 options = webdriver.ChromeOptions()
 options.add_argument("--headless=new")
@@ -22,6 +22,7 @@ input_element.clear()
 input_element.send_keys(str(query) + Keys.ENTER)
 
 search_results = driver.find_elements(By.XPATH, '//*[@id="id-a-link"]')
+search_results = driver.find_elements(By.PARTIAL_LINK_TEXT, "Bluetooth")
 urls = [x.get_property("href") for x in search_results]
 for i in range(0, len(urls)):
     url = urls[i]
@@ -75,24 +76,29 @@ for i in range(0, len(urls)):
         details.append(actual_price.text)
 
     driver.execute_script("window.scrollTo(0, 300)")
-    WebDriverWait(driver, 1).until(
-        EC.presence_of_element_located(
-            (
-                By.XPATH,
-                '//*[@id="module_product_review"]/div/div/div[2]/div[1]/div[1]/div[1]/span[1]',
+    try:
+        WebDriverWait(driver, 1).until(
+            EC.presence_of_element_located(
+                (
+                    By.XPATH,
+                    '//*[@id="module_product_review"]/div/div/div[2]/div[1]/div[1]/div[1]/span[1]',
+                )
             )
         )
-    )
-    score = driver.find_element(
-        By.XPATH,
-        '//*[@id="module_product_review"]/div/div/div[2]/div[1]/div[1]/div[1]/span[1]',
-    )
-    details.append(score.text)
+        score = driver.find_element(
+            By.XPATH,
+            '//*[@id="module_product_review"]/div/div/div[2]/div[1]/div[1]/div[1]/span[1]',
+        )
+        details.append(score.text)
 
-    reviews = driver.find_element(
-        By.XPATH, '//*[@id="module_product_review"]/div/div/div[2]/div[1]/div[1]/div[3]'
-    )
-    details.append(reviews.text)
+        reviews = driver.find_element(
+            By.XPATH,
+            '//*[@id="module_product_review"]/div/div/div[2]/div[1]/div[1]/div[3]',
+        )
+        details.append(reviews.text)
+    except:
+        details.append("0")
+        details.append("0 reviews")
 
     print(details)
     print(" ")
