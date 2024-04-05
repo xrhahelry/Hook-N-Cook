@@ -7,7 +7,7 @@ import time
 options = webdriver.ChromeOptions()
 options.add_argument("--headless=new")
 
-service = Service(executable_path="chromedriver.exe")
+service = Service(executable_path="./scraper/chromedriver.exe")
 driver = webdriver.Chrome(service=service, options=options)
 driver.get("https://www.daraz.com.np/laptops/")
 
@@ -26,6 +26,6 @@ for i in range(0, 41):
 
 df = pd.DataFrame(links, columns=["Url"])
 df.drop_duplicates()
-df.to_csv("../datasets/laptops_url_dataset.csv", index=False)
+df.to_csv("./datasets/laptops_url_dataset1.csv", index=False)
 
 driver.quit()
