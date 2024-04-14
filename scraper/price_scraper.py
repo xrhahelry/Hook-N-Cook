@@ -5,6 +5,7 @@ import pandas as pd
 import os
 import re
 from datetime import date
+import time
 
 options = webdriver.ChromeOptions()
 options.add_argument("--headless=new")
@@ -46,7 +47,5 @@ for link in links:
     name = re.sub(r"[^a-zA-Z0-9]", "", name)
     name = re.sub(r"httpswwwdarazcomnpproducts", "", name)
     filename = "../datasets/prices/" + name + ".csv"
-    try:
-        df.to_csv(filename, mode="a", header=not os.path.exists(filename), index=False)
-    except:
-        failed.append(filename)
+    df.to_csv(filename, mode="a", header=not os.path.exists(filename), index=False)
+    time.sleep(1)
