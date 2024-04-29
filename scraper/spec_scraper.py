@@ -22,7 +22,7 @@ today = date.today()
 
 
 for x in range(1, 1000):
-    filename = "../datasets/specs" + file[x]
+    filename = "../datasets/specs/" + file[x]
     driver.get(links[x])
 
     name = driver.find_element(
