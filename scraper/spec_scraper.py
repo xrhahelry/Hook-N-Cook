@@ -20,15 +20,19 @@ file = df["Filename"]
 
 # table = pd.DataFrame(columns=['Name', 'Reviews', 'Ratings', 'Specification']) 
 newdf=pd.DataFrame()
-for x in range(1, 3):
+for x in range(len(links)):
     
     driver.get(links[x])
     details= []
-    name = driver.find_element(
-        By.XPATH, '//*[@id="module_product_title_1"]/div/div/span'
-    ).text
-    details.append(name)
-    driver.execute_script("window.scrollTo(0, 300)")
+    try:
+        name = driver.find_element(
+            By.XPATH, '//*[@id="module_product_title_1"]/div/div/span'
+        ).text
+        details.append(name)
+        driver.execute_script("window.scrollTo(0, 300)")
+    except:
+        continue
+        
     try:
         WebDriverWait(driver, 1).until(
             EC.presence_of_element_located(
@@ -57,6 +61,7 @@ for x in range(1, 3):
         try: 
             specs = driver.find_element(
                 By.XPATH, '//*[@id="module_product_detail"]/div/div/div[3]/h2'
+        
             )
             WebDriverWait(driver, 1).until(
                 EC.presence_of_element_located(
