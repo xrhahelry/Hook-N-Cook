@@ -12,7 +12,7 @@ options.add_argument("--headless=new")
 
 # This path works with vscode's code runner plugin.
 # If you get an error try just chromedriver
-service = Service(executable_path="./scraper/chromedriver.exe")
+service = Service(executable_path="chromedriver.exe")
 driver = webdriver.Chrome(service=service, options=options)
 
 df = pd.read_csv(r"C:\Users\acer\Desktop\Hook-n-Cook\datasets\urls.csv")
@@ -23,7 +23,7 @@ today = date.today()
 for i in range(0, len(links)):
     # This path works with vscode's code runner plugin.
     # try ../datasets/prices/ if you are running the file from inside the scraper folder
-    filename = "./datasets/prices/" + files[i]
+    filename = "../datasets/prices/" + files[i]
     driver.get(links[i])
     try:
         try:
