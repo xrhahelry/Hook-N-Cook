@@ -15,7 +15,7 @@ options.add_argument("--headless=new")
 service = Service(executable_path="chromedriver.exe")
 driver = webdriver.Chrome(service=service, options=options)
 
-df = pd.read_csv(r"C:\Users\acer\Desktop\Hook-n-Cook\datasets\urls.csv")
+df = pd.read_csv("../datasets/urls.csv")
 links = df["Url"]
 files = df["Filename"]
 today = date.today()

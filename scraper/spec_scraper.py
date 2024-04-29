@@ -16,19 +16,18 @@ driver = webdriver.Chrome(service=service, options=options)
 
 df = pd.read_csv("../datasets/urls.csv")
 links = df["Url"]
-
 file = df["Filename"]
-today = date.today()
 
-
-for x in range(1, 1000):
-    filename = "../datasets/specs" + file[x]
+# table = pd.DataFrame(columns=['Name', 'Reviews', 'Ratings', 'Specification']) 
+newdf=pd.DataFrame()
+for x in range(1, 3):
+    
     driver.get(links[x])
-
+    details= []
     name = driver.find_element(
         By.XPATH, '//*[@id="module_product_title_1"]/div/div/span'
     ).text
-
+    details.append(name)
     driver.execute_script("window.scrollTo(0, 300)")
     try:
         WebDriverWait(driver, 1).until(
@@ -51,6 +50,8 @@ for x in range(1, 1000):
     except:
         rating = "0"
         reviews = "0"
+    details.append(rating)
+    details.append(reviews)
 
     try:
         try: 
@@ -106,13 +107,17 @@ for x in range(1, 1000):
         specs_list = driver.find_element(
             By.XPATH, '//*[@id="module_product_detail"]/div/div/div[3]/div[1]/ul'
         ).text
+    details.append(specs_list)
+    print(details)
 
-    df = pd.DataFrame(
-        [[today, name, rating, reviews, specs_list]],
-        columns = ["Date", "Name", "Rating", "Reviews", "Specification"]
+    df=pd.DataFrame(
+        [[name, rating, reviews, specs_list]], columns=['Name', 'Rating','Review', 'Specification']
     )
 
-    df.to_csv(filename, mode='a', header=not os.path.exists(filename), index=False)
+    newdf = pd.concat([newdf, df], ignore_index=True)
     time.sleep(1)
+
+filepath = "../datasets/" + 'ProductDetail.csv'
+newdf.to_csv(filepath, index=False)
 
 driver.quit()
