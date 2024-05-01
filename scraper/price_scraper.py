@@ -16,9 +16,8 @@ options.add_argument("--disk-cache-size=0")
 
 # This path works with vscode's code runner plugin.
 # If you get an error try just chromedriver
-service = Service(executable_path="chromedriver.exe")
+service = Service(executable_path="scraper/chromedriver.exe")
 driver = webdriver.Chrome(service=service, options=options)
-driver.maximize_window()
 
 df = pd.read_csv("./datasets/urls.csv")
 links = df["Url"]
@@ -26,9 +25,10 @@ files = df["Filename"]
 today = date.today()
 
 for i in range(0, len(links)):
+    print(i)
     # This path works with vscode's code runner plugin.
     # try ../datasets/prices/ if you are running the file from inside the scraper folder
-    filename = "../datasets/prices/" + files[i]
+    filename = "./datasets/prices/" + files[i]
     driver.get(links[i])
     try:
         try:
@@ -58,11 +58,12 @@ for i in range(0, len(links)):
         )
     except:
         print(links[i])
-        dd = pd.DataFrame([[links[i]]], columns=["Failed"])
+        dd = pd.DataFrame([[links[i], files[i]]], columns=["Failed Url", "Filename"])
         dd.to_csv(
-            "./datasets/failed.csv",
+            "./datasets/failed_prices.csv",
+            header=not os.path.exists("./datasets/failed_prices.csv"),
             mode="a",
-            header=not os.path.exists("./datasets/failed.csv"),
+            index=False,
         )
         df = pd.DataFrame(
             [[today, None, None]],
@@ -71,6 +72,8 @@ for i in range(0, len(links)):
 
     df.to_csv(filename, mode="a", header=not os.path.exists(filename), index=False)
     time.sleep(1)
+    if i % 50 == 0:
+        time.sleep(10)
 
 driver.delete_all_cookies()
 driver.quit()
