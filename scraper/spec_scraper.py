@@ -11,6 +11,9 @@ import re
 
 options = webdriver.ChromeOptions()
 options.add_argument("--headless=new")
+options.add_argument("--disable-application-cache")
+options.add_argument("--disable-cache")
+options.add_argument("--disk-cache-size=0")
 
 service = Service(executable_path="./scraper/chromedriver")
 driver = webdriver.Chrome(service=service, options=options)
@@ -135,8 +138,6 @@ for x in range(len(links)):
     newdf = pd.concat([newdf, df], ignore_index=True)
     time.sleep(1)
 
-
-filepath = "../datasets/" + 'ProductDetail2.csv'
-newdf.to_csv(filepath, index=False)
-
+newdf.to_csv("../datasets/" + 'ProductDetail.csv', index=False)
+driver.delete_all_cookies()
 driver.quit()
