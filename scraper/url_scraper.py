@@ -8,8 +8,6 @@ import hashlib
 options = webdriver.ChromeOptions()
 options.add_argument("--headless=new")
 
-# This path works with vscode's code runner plugin.
-# If you get an error try just chromedriver
 service = Service(executable_path="./scraper/chromedriver.exe")
 driver = webdriver.Chrome(service=service, options=options)
 
@@ -34,8 +32,6 @@ files = [file + ".csv" for file in files]
 
 df = pd.DataFrame(list(zip(links, files)), columns=["Url", "Filename"])
 df.drop_duplicates(inplace=True)
-# This path works with vscode's code runner plugin.
-# try ../datasets/{filename}.csv if you are running the file from inside the scraper folder
 df.to_csv("./datasets/urls.csv", index=False)
 
 driver.quit()
