@@ -15,22 +15,22 @@ options.add_argument("--disable-application-cache")
 options.add_argument("--disable-cache")
 options.add_argument("--disk-cache-size=0")
 
-service = Service(executable_path="./scraper/chromedriver")
+service = Service(executable_path="scraper/chromedriver.exe")
 driver = webdriver.Chrome(service=service, options=options)
 
-df = pd.read_csv("../datasets/urls.csv")
+df = pd.read_csv("./datasets/urls.csv")
 links = df["Url"]
 file = df["Filename"]
 
 newdf=pd.DataFrame()
-for x in range(len(links)):
+for x in range(10):
     
     driver.get(links[x])
     details= []
-    urls = str(links[x])
-    fn = str(file[x])
-    details.append(urls)
-    details.append(fn)
+    # urls = str(links[x])
+    # fn = str(links[x])
+    # details.append(urls)
+    # details.append(fn)
 
     try:
         name = driver.find_element(
@@ -65,7 +65,7 @@ for x in range(len(links)):
     details.append(rating)
     details.append(reviews)
 
-  
+
     try:
         view = driver.find_element(
             By.XPATH, '//*[@id="module_product_detail"]/div/div[2]/button'
@@ -86,8 +86,8 @@ for x in range(len(links)):
                 )
             )
         )
-        specs_list = driver.find_element(
-            By.XPATH, '//*[@id="module_product_detail"]/div/div/div[3]/div[1]/ul'
+        specs_list= driver.find_element(
+            By.XPATH, '//*[@id="module_product_detail"]/div/div[2]/button'
         ).text
     except:
         try:
@@ -123,21 +123,21 @@ for x in range(len(links)):
                 By.XPATH, '//*[@id="module_product_detail"]/div/div/div[2]/div[1]/ul'
             ).text
 
-        
-  
-    details.append(specs_list)
-    print(details)
+            
     
-    df=pd.DataFrame(
-        [[urls, fn, name, rating, reviews, specs_list]], columns=["Urls", "Filename", "Name", "Rating", "Review", "Specification"]
-    )
-    df["Name"] = (
-        df["Name"].str.strip("")
-    )
+        details.append(specs_list)
+        print(details)
+        
+        # df=pd.DataFrame(
+        #     [[urls, fn, name, rating, reviews, specs_list]], columns=["Urls", "Filename", "Name", "Rating", "Review", "Specification"]
+        # )
+        # df["Name"] = (
+        #     df["Name"].str.strip("")
+        # )
 
-    newdf = pd.concat([newdf, df], ignore_index=True)
-    time.sleep(1)
+        # newdf = pd.concat([newdf, df], ignore_index=True)
+        time.sleep(1)
 
-newdf.to_csv("../datasets/" + 'ProductDetail.csv', index=False)
+# newdf.to_csv("../datasets/" + 'ProductDetail.csv', index=False)
 driver.delete_all_cookies()
 driver.quit()
