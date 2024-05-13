@@ -15,7 +15,7 @@ options.add_argument("--disable-application-cache")
 options.add_argument("--disable-cache")
 options.add_argument("--disk-cache-size=0")
 
-service = Service(executable_path="scraper/chromedriver.exe")
+service = Service(executable_path="backend/scraper/chromedriver")
 driver = webdriver.Chrome(service=service, options=options)
 
 links = []

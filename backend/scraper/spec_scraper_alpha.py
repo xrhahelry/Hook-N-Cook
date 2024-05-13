@@ -12,10 +12,10 @@ options.add_argument("--disable-application-cache")
 options.add_argument("--disable-cache")
 options.add_argument("--disk-cache-size=0")
 
-service = Service(executable_path="./scraper/chromedriver")
+service = Service(executable_path="backend/scraper/chromedriver.exe")
 driver = webdriver.Chrome(service=service, options=options)
 
-df = pd.read_csv("../datasets/urls.csv")
+df = pd.read_csv("backend/datasets/urls.csv")
 links = df["Url"]
 file = df["Filename"]
 titles = []
@@ -73,12 +73,12 @@ for x in range(len(links)):
             )
             stitle = driver.find_elements(By.CLASS_NAME, "key-title")
 
+    data = [stitle[i].text for i in range(len(stitle) - 1)]
     titles += data
-    data = [x.text for x in stitle]
     print(data)
 
-filepath = "./datasets/" + "titles.csv"
-df = pd.DataFrame(titles, columns=['Title'])
+filepath = "./backend/datasets/" + "titles.csv"
+df = pd.DataFrame(titles, columns=["Title"])
 df.to_csv(filepath, index=False)
 
 driver.delete_all_cookies()
