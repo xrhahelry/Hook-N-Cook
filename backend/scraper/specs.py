@@ -5,7 +5,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import pandas as pd
 import os
-import time
 import re
 
 options = webdriver.ChromeOptions()
@@ -21,33 +20,35 @@ links = df["Url"]
 fn = df["Filename"]
 filepath = "backend/datasets/specs.csv"
 
+
 def update_specs(row):
-        title = row['Title']
-        value = row['Value']
-        if title in specs:
-            specs[title] = value
+    title = row["Title"]
+    value = row["Value"]
+    if title in specs:
+        specs[title] = value
+
 
 for x in range(len(links)):
     titles = []
     values = []
     specs = {
-        'id': None,
-        'price': None,
-        'brand':None,
-        'model':None,
-        'processor': None, 
-        'operating system': None,
-        'ram memory': None, 
-        'display size': None, 
-        'storage capacity': None, 
-        'cpu cores': None, 
-        'graphics card': None, 
-        'graphics memory': None, 
-        'touch': None,
-        'rating': None,
-        'reviews': None,
-        'name': None,
-        'url': None
+        "id": None,
+        "price": None,
+        "brand": None,
+        "model": None,
+        "processor": None,
+        "operating system": None,
+        "ram memory": None,
+        "display size": None,
+        "storage capacity": None,
+        "cpu cores": None,
+        "graphics card": None,
+        "graphics memory": None,
+        "touch": None,
+        "rating": None,
+        "reviews": None,
+        "name": None,
+        "url": None,
     }
     driver.get(links[x])
     print(x, links[x])
@@ -55,45 +56,77 @@ for x in range(len(links)):
         name = driver.find_element(
             By.XPATH, '//*[@id="module_product_title_1"]/div/div/span'
         ).text
-        specs['name'] = name
-        specs['id'] = fn[x].replace(".csv", "")
-        specs['url'] = links[x]
-        known_brands = ['dell', 'asus', 'acer', 'lenovo', 'hp', 'msi', 'apple', 'huawei', 'toshiba',
-                 'microsoft', 'mi', 'toshiba', 'chiwi', 'chuwi', 'avita', 'xlab', 'honor', 'dynabook', 'razer', 'gateway',
-                 'nova', 'level51', 'gigabyte']
+        specs["name"] = name
+        specs["id"] = fn[x].replace(".csv", "")
+        specs["url"] = links[x]
+        known_brands = [
+            "dell",
+            "asus",
+            "acer",
+            "lenovo",
+            "hp",
+            "msi",
+            "apple",
+            "huawei",
+            "toshiba",
+            "microsoft",
+            "mi",
+            "toshiba",
+            "chiwi",
+            "chuwi",
+            "avita",
+            "xlab",
+            "honor",
+            "dynabook",
+            "razer",
+            "gateway",
+            "nova",
+            "level51",
+            "gigabyte",
+        ]
         name = name.replace("-", " ")
         split_name = name.split(" ")
         b = split_name[0].lower()
         model = split_name[1] + " " + split_name[2]
-        if not(b in known_brands):     
+        if not (b in known_brands):
             for i in range(len(split_name)):
                 string = split_name[i].lower()
                 if string in known_brands:
                     b = string
-                    model = split_name[i+1] + " " + split_name[i+2]
+                    model = split_name[i + 1] + " " + split_name[i + 2]
                 else:
-                    if string == 'aspire' or string=='predator':
-                        b = 'acer'
-                    elif string == 'macbook':
-                        b = 'apple'
-                    elif string == 'expertbook':
-                        b = 'asus'
-                    elif string == 'nova':
-                        b = 'ripple'
-                    elif string == 'modern' or string == 'summit' or string == 'creator' or string=='delta' or re.match(r'^g\w{3}$', string):#gf__/gp_ also msi
-                        b = 'msi'
-                    elif string == 'original' or string=='pavilion' or string == 'vostro':
-                        b = 'dell'
-                    elif string == 'vaio':
-                        b = 'sony'
-                    if string == 'original':
-                        model = 'inspiron 13'
+                    if string == "aspire" or string == "predator":
+                        b = "acer"
+                    elif string == "macbook":
+                        b = "apple"
+                    elif string == "expertbook":
+                        b = "asus"
+                    elif string == "nova":
+                        b = "ripple"
+                    elif (
+                        string == "modern"
+                        or string == "summit"
+                        or string == "creator"
+                        or string == "delta"
+                        or re.match(r"^g\w{3}$", string)
+                    ):
+                        b = "msi"
+                    elif (
+                        string == "original"
+                        or string == "pavilion"
+                        or string == "vostro"
+                    ):
+                        b = "dell"
+                    elif string == "vaio":
+                        b = "sony"
+                    if string == "original":
+                        model = "inspiron 13"
                     else:
-                        model = string + " " + split_name[i+1] 
-        specs['brand'] = b
-        specs['model'] = model
-        pp = pd.read_csv('backend/datasets/prices/' + fn[x])
-        specs['price'] = pp.iloc[-1, -1]
+                        model = string + " " + split_name[i + 1]
+        specs["brand"] = b
+        specs["model"] = model
+        pp = pd.read_csv("backend/datasets/prices/" + fn[x])
+        specs["price"] = pp.iloc[-1, -1]
         driver.execute_script("window.scrollTo(0, 300)")
     except:
         continue
@@ -120,13 +153,12 @@ for x in range(len(links)):
     except:
         rating = "0"
         reviews = "0"
-    specs['rating'] = rating
-    specs['reviews'] = reviews
+    specs["rating"] = rating
+    specs["reviews"] = reviews
 
     try:
         view = driver.find_element(
             By.XPATH, '//*[@id="module_product_detail"]/div/div[2]/button'
-            
         )
         driver.execute_script("arguments[0].scrollIntoView();", view)
         driver.execute_script("window.scrollBy(0, -100)")
@@ -160,7 +192,7 @@ for x in range(len(links)):
                 )
             )
             stitle = driver.find_elements(By.CLASS_NAME, "key-title")
-            svalue= driver.find_elements(By.CLASS_NAME, "key-value")
+            svalue = driver.find_elements(By.CLASS_NAME, "key-value")
         except:
             specheading = driver.find_element(
                 By.XPATH, '//*[@id="module_product_detail"]/div/div/div[2]/h2'
@@ -179,24 +211,29 @@ for x in range(len(links)):
     titles = [stitle[i].text for i in range(2, len(stitle) - 1)]
     values = [svalue[i].text for i in range(2, len(stitle) - 1)]
     temp = pd.DataFrame(list(zip(titles, values)), columns=["Title", "Value"])
-    temp.loc[:, 'Title'] = temp['Title'].str.replace("_", " ")
-    temp.loc[:, 'Title'] = temp['Title'].apply(lambda x: x.lower())
-    temp = temp[(temp['Title'] != "camera front (megapixels)") & (temp['Title'] !="cpu speed (ghz)") & 
-                            (temp['Title'] != "wireless connectivity") & 
-                            (temp['Title'] != "input output ports") & 
-                            (temp['Title'] != "battery life") &
-                            (temp['Title'] != "ac adapter") &
-                            (temp['Title'] != "model no.") &
-                            (temp['Title'] != "model") &
-                            (temp['Title'] != "generation") &
-                            (temp['Title'] != "condition") &
-                            (temp['Title'] != "storage type") &
-                            (temp['Title'] != "processor type") &
-                            (temp['Title'] != "touch pad")]
-    temp.loc[:, 'Title'] = temp['Title'].str.replace("storage capacity new", "storage capacity")
-    temp.loc[:, 'Title'] = temp['Title'].str.replace("number of cpu cores", "cpu cores")
-    temp.loc[:, 'Value'] = temp['Value'].str.replace("GB", "")
-    temp.loc[:, 'Value'] = temp['Value'].str.replace(" Inch", "")
+    temp.loc[:, "Title"] = temp["Title"].str.replace("_", " ")
+    temp.loc[:, "Title"] = temp["Title"].apply(lambda x: x.lower())
+    temp = temp[
+        (temp["Title"] != "camera front (megapixels)")
+        & (temp["Title"] != "cpu speed (ghz)")
+        & (temp["Title"] != "wireless connectivity")
+        & (temp["Title"] != "input output ports")
+        & (temp["Title"] != "battery life")
+        & (temp["Title"] != "ac adapter")
+        & (temp["Title"] != "model no.")
+        & (temp["Title"] != "model")
+        & (temp["Title"] != "generation")
+        & (temp["Title"] != "condition")
+        & (temp["Title"] != "storage type")
+        & (temp["Title"] != "processor type")
+        & (temp["Title"] != "touch pad")
+    ]
+    temp.loc[:, "Title"] = temp["Title"].str.replace(
+        "storage capacity new", "storage capacity"
+    )
+    temp.loc[:, "Title"] = temp["Title"].str.replace("number of cpu cores", "cpu cores")
+    temp.loc[:, "Value"] = temp["Value"].str.replace("GB", "")
+    temp.loc[:, "Value"] = temp["Value"].str.replace(" Inch", "")
     temp.apply(update_specs, axis=1)
     print(specs)
     dd = pd.DataFrame([specs])
