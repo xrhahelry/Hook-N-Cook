@@ -25,6 +25,8 @@ for i in range(1, 42):
     urls = [x.get_property("href") for x in products]
     links += urls
 
+print(len(links))
+
 
 def generate_filename(url):
     hashed_url = hashlib.sha256(url.encode()).hexdigest()
