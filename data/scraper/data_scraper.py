@@ -32,6 +32,7 @@ def update_specs(row):
 
 for x in range(len(links)):
     if fn[x].replace(".csv", "") in old:
+        print("old data ", fn[x], " ", links[x])
         pp = pd.read_csv("data/prices/" + fn[x])
         data.loc[data.id == fn[x].replace(".csv", ""), "price"] = int(pp.iloc[-1, -1])
         data.to_csv(filepath, index=False)
