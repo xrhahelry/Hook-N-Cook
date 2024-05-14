@@ -14,7 +14,7 @@ options.add_argument("--disable-application-cache")
 options.add_argument("--disable-cache")
 options.add_argument("--disk-cache-size=0")
 
-service = Service(executable_path="backend/scraper/chromedriver.exe")
+service = Service(executable_path="data/scraper/chromedriver.exe")
 driver = webdriver.Chrome(service=service, options=options)
 
 links = []
@@ -37,16 +37,13 @@ files = [file + ".csv" for file in files]
 
 df = pd.DataFrame(list(zip(links, files)), columns=["Url", "Filename"])
 df.drop_duplicates(inplace=True)
-df.to_csv("backend/datasets/urls.csv", index=False)
+df.to_csv("data/urls.csv", index=False)
 
-df = pd.read_csv("backend/datasets/urls.csv")
-links = df["Url"]
-files = df["Filename"]
 today = date.today()
 
 for i in range(0, len(links)):
     print(i)
-    filename = "backend/datasets/prices/" + files[i]
+    filename = "data/prices/" + files[i]
     driver.get(links[i])
     try:
         try:
@@ -86,8 +83,8 @@ for i in range(0, len(links)):
         print(links[i])
         dd = pd.DataFrame([[files[i], links[i]]], columns=["Filename", "Url"])
         dd.to_csv(
-            "backend/datasets/failed.csv",
-            header=not os.path.exists("backend/datasets/failed.csv"),
+            "data/failed.csv",
+            header=not os.path.exists("data/failed.csv"),
             mode="a",
             index=False,
         )

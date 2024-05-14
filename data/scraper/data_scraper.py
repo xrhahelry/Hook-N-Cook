@@ -13,12 +13,12 @@ options.add_argument("--disable-application-cache")
 options.add_argument("--disable-cache")
 options.add_argument("--disk-cache-size=0")
 
-service = Service(executable_path="backend/scraper/chromedriver.exe")
+service = Service(executable_path="data/scraper/chromedriver.exe")
 driver = webdriver.Chrome(service=service, options=options)
-df = pd.read_csv("backend/datasets/urls.csv")
+df = pd.read_csv("data/urls.csv")
 links = df["Url"]
 fn = df["Filename"]
-filepath = "backend/datasets/specs.csv"
+filepath = "data/laptops.csv"
 
 
 def update_specs(row):
@@ -125,8 +125,8 @@ for x in range(len(links)):
                         model = string + " " + split_name[i + 1]
         specs["brand"] = b
         specs["model"] = model
-        pp = pd.read_csv("backend/datasets/prices/" + fn[x])
-        specs["price"] = pp.iloc[-1, -1]
+        pp = pd.read_csv("data/prices/" + fn[x])
+        specs["price"] = int(pp.iloc[-1, -1])
         driver.execute_script("window.scrollTo(0, 300)")
     except:
         continue

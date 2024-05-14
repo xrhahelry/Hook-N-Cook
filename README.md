@@ -12,4 +12,7 @@ Then the price data of each products looks like this.
 
 Right now the file is very short but it will have many more rows.
 Lastly the actual dataset that we will be creating which will have all the data about laptops available on daraz look like this.
-**We are working on it.😝**
+![](https://i.imgur.com/9eseS6t.png)
+
+## Recommendation model
+After the data has been collected and cleaned we can begin the actual project of recommending the best laptop taylored to each user in the current market.
