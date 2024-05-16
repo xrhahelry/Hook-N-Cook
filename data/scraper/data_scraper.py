@@ -15,11 +15,11 @@ options.add_argument("--disk-cache-size=0")
 
 service = Service(executable_path="data/scraper/chromedriver.exe")
 driver = webdriver.Chrome(service=service, options=options)
-df = pd.read_csv("data/urls.csv")
+df = pd.read_csv("data/scraper/urls.csv")
 links = df["Url"]
 fn = df["Filename"]
-filepath = "data/laptops.csv"
-data = pd.read_csv("data/laptops.csv")
+filepath = "data/scraper/unclean.csv"
+data = pd.read_csv("data/scraper/unclean.csv")
 old = data["id"].to_list()
 
 
@@ -30,9 +30,8 @@ def update_specs(row):
         specs[title] = value
 
 
-for x in range(len(links)):
+for x in range(0, len(links)):
     if fn[x].replace(".csv", "") in old:
-        print("old data ", fn[x], " ", links[x])
         pp = pd.read_csv("data/prices/" + fn[x])
         data.loc[data.id == fn[x].replace(".csv", ""), "price"] = int(pp.iloc[-1, -1])
         data.to_csv(filepath, index=False)
@@ -45,7 +44,6 @@ for x in range(len(links)):
             "brand": None,
             "model": None,
             "processor": None,
-            "operating system": None,
             "ram memory": None,
             "display size": None,
             "storage capacity": None,
@@ -59,7 +57,6 @@ for x in range(len(links)):
             "url": None,
         }
         driver.get(links[x])
-        print(x, links[x])
         try:
             name = driver.find_element(
                 By.XPATH, '//*[@id="module_product_title_1"]/div/div/span'
@@ -221,21 +218,23 @@ for x in range(len(links)):
         temp = pd.DataFrame(list(zip(titles, values)), columns=["Title", "Value"])
         temp.loc[:, "Title"] = temp["Title"].str.replace("_", " ")
         temp.loc[:, "Title"] = temp["Title"].apply(lambda x: x.lower())
-        temp = temp[
-            (temp["Title"] != "camera front (megapixels)")
-            & (temp["Title"] != "cpu speed (ghz)")
-            & (temp["Title"] != "wireless connectivity")
-            & (temp["Title"] != "input output ports")
-            & (temp["Title"] != "battery life")
-            & (temp["Title"] != "ac adapter")
-            & (temp["Title"] != "model no.")
-            & (temp["Title"] != "model")
-            & (temp["Title"] != "generation")
-            & (temp["Title"] != "condition")
-            & (temp["Title"] != "storage type")
-            & (temp["Title"] != "processor type")
-            & (temp["Title"] != "touch pad")
+        unwanted_data = [
+            "camera front (megapixels)",
+            "cpu speed (ghz)",
+            "wireless connectivity",
+            "input output ports",
+            "battery life",
+            "ac adapter",
+            "model no.",
+            "model",
+            "generation",
+            "condition",
+            "storage type",
+            "processor type",
+            "touch pad",
+            "operating system",
         ]
+        temp = temp[~temp["Title"].isin(unwanted_data)]
         temp.loc[:, "Title"] = temp["Title"].str.replace(
             "storage capacity new", "storage capacity"
         )
@@ -245,7 +244,7 @@ for x in range(len(links)):
         temp.loc[:, "Value"] = temp["Value"].str.replace("GB", "")
         temp.loc[:, "Value"] = temp["Value"].str.replace(" Inch", "")
         temp.apply(update_specs, axis=1)
-        print(specs)
+        print(specs["id"], specs["brand"], specs["model"])
         dd = pd.DataFrame([specs])
         dd.to_csv(filepath, mode="a", header=not os.path.exists(filepath), index=False)
 
