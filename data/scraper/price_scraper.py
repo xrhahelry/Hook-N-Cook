@@ -44,6 +44,12 @@ today = date.today()
 
 for i in range(0, len(links)):
     print(i)
+    if (
+        links[i]
+        == "https://www.daraz.com.np/products/dell-vostro-3888-computer-set-i114454487-s1031087096.html?search=1"
+    ):
+        continue
+
     filename = "data/prices/" + files[i]
     driver.get(links[i])
     try:

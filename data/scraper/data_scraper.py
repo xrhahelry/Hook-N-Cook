@@ -31,6 +31,12 @@ def update_specs(row):
 
 
 for x in range(0, len(links)):
+    if (
+        links[x]
+        == "https://www.daraz.com.np/products/dell-vostro-3888-computer-set-i114454487-s1031087096.html?search=1"
+    ):
+        continue
+
     if fn[x].replace(".csv", "") in old:
         pp = pd.read_csv("data/prices/" + fn[x])
         data.loc[data.id == fn[x].replace(".csv", ""), "price"] = int(pp.iloc[-1, -1])
