@@ -18,8 +18,8 @@ driver = webdriver.Chrome(service=service, options=options)
 df = pd.read_csv("data/scraper/urls.csv")
 links = df["Url"]
 fn = df["Filename"]
-filepath = "data/scraper/unclean.csv"
-data = pd.read_csv("data/scraper/unclean.csv")
+filepath = "data/laptop.csv"
+data = pd.read_csv("data/laptop.csv")
 old = data["id"].to_list()
 
 
@@ -31,10 +31,11 @@ def update_specs(row):
 
 
 for x in range(0, len(links)):
-    if (
-        links[x]
-        == "https://www.daraz.com.np/products/dell-vostro-3888-computer-set-i114454487-s1031087096.html?search=1"
-    ):
+    if links[i] in [
+        "https://www.daraz.com.np/products/dell-precision-3430-sff-core-i7-8700-32ghz-32gb-ram-512gb-solid-state-drive-windows-11-pro-64bit-renewed-i129855105-s1037690646.html?search=1",
+        "https://www.daraz.com.np/products/dell-vostro-3888-computer-set-i114454487-s1031087096.html?search=1",
+        "https://www.daraz.com.np/products/dell-tiny-i5-6th-generation-8-gb-ram-256-ssd-with-mouse-keyboard-wifi-dongle-and-mouse-pad-i129272829-s1037294262.html?search=1",
+    ]:
         continue
 
     if fn[x].replace(".csv", "") in old:
