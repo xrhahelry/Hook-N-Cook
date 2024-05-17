@@ -31,7 +31,7 @@ def update_specs(row):
 
 
 for x in range(0, len(links)):
-    if links[i] in [
+    if links[x] in [
         "https://www.daraz.com.np/products/dell-precision-3430-sff-core-i7-8700-32ghz-32gb-ram-512gb-solid-state-drive-windows-11-pro-64bit-renewed-i129855105-s1037690646.html?search=1",
         "https://www.daraz.com.np/products/dell-vostro-3888-computer-set-i114454487-s1031087096.html?search=1",
         "https://www.daraz.com.np/products/dell-tiny-i5-6th-generation-8-gb-ram-256-ssd-with-mouse-keyboard-wifi-dongle-and-mouse-pad-i129272829-s1037294262.html?search=1",
@@ -42,6 +42,7 @@ for x in range(0, len(links)):
         pp = pd.read_csv("data/prices/" + fn[x])
         data.loc[data.id == fn[x].replace(".csv", ""), "price"] = int(pp.iloc[-1, -1])
         data.to_csv(filepath, index=False)
+        print(x)
     else:
         titles = []
         values = []
