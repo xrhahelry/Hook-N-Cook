@@ -15,4 +15,4 @@ Lastly the actual dataset that we will be creating which will have all the data 
 ![](https://i.imgur.com/9eseS6t.png)
 
 ## Recommendation model
-After the data has been collected and cleaned we can begin the actual project of recommending the best laptop taylored to each user in the current market.
+After the data has been collected and cleaned we can begin the actual project of recommending the best laptop tailored to each user in the current market.
