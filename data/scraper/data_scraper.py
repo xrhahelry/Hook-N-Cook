@@ -24,6 +24,7 @@ old = data["id"].to_list()
 
 
 def update_specs(row):
+    """Put scraped values into the dictionary."""
     title = row["Title"]
     value = row["Value"]
     if title in specs:

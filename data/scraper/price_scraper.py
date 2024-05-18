@@ -90,16 +90,10 @@ for i in range(0, len(links)):
             df["Discount Price"].str.replace("Rs. ", "").str.replace(",", "")
         )
     except:
-        print(links[i])
-        dd = pd.DataFrame([[files[i], links[i]]], columns=["Filename", "Url"])
-        dd.to_csv(
-            "data/scraper/failed.csv",
-            header=not os.path.exists("data/scraper/failed.csv"),
-            mode="a",
-            index=False,
-        )
+        print(filename, links[i])
+        pp = pd.read_csv(filename)
         df = pd.DataFrame(
-            [[today, None, None]],
+            [[today, int(pp.iloc[-1, -2]), int(pp.iloc[-1, -2])]],
             columns=["Date", "Actual Price", "Discount Price"],
         )
 
