@@ -59,7 +59,6 @@ for x in range(0, len(links)):
             "cpu cores": None,
             "graphics card": None,
             "graphics memory": None,
-            "touch": None,
             "rating": None,
             "reviews": None,
             "name": None,

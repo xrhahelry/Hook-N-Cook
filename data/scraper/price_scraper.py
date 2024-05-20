@@ -16,8 +16,7 @@ options.add_argument("--disk-cache-size=0")
 
 service = Service(executable_path="data/scraper/chromedriver.exe")
 driver = webdriver.Chrome(service=service, options=options)
-# 1512
-# ddf16c064a,82999.0,dell,lnspiron 15,Intel Core i5,8,15.6,512,Not Specified,,,,0.0,0,"Dell lnspiron 15 3511 i5-8GB-512GB-15.6""FHD",https://www.daraz.com.np/products/dell-lnspiron-15-3511-i5-8gb-512gb-156fhd-i120634311-s1032895976.html?search=1
+
 links = []
 for i in range(0, 42):
     url = f"https://www.daraz.com.np/laptops/?page={i}"
