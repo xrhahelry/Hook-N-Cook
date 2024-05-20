@@ -25,8 +25,6 @@ for i in range(0, 42):
     urls = [x.get_property("href") for x in products]
     links += urls
 
-print(len(links))
-
 
 def generate_filename(url):
     hashed_url = hashlib.sha256(url.encode()).hexdigest()
@@ -41,11 +39,12 @@ df = pd.DataFrame(list(zip(links, files)), columns=["Url", "Filename"])
 df.drop_duplicates(inplace=True)
 df.to_csv("data/scraper/urls.csv", index=False)
 
+links = df["Url"]
 today = date.today()
 
-for i in range(0, len(links)):
+for i, link in enumerate(links):
     print(i)
-    if links[i] in [
+    if link in [
         "https://www.daraz.com.np/products/dell-precision-3430-sff-core-i7-8700-32ghz-32gb-ram-512gb-solid-state-drive-windows-11-pro-64bit-renewed-i129855105-s1037690646.html?search=1",
         "https://www.daraz.com.np/products/dell-vostro-3888-computer-set-i114454487-s1031087096.html?search=1",
         "https://www.daraz.com.np/products/dell-tiny-i5-6th-generation-8-gb-ram-256-ssd-with-mouse-keyboard-wifi-dongle-and-mouse-pad-i129272829-s1037294262.html?search=1",
@@ -53,7 +52,7 @@ for i in range(0, len(links)):
         continue
 
     filename = "data/prices/" + files[i]
-    driver.get(links[i])
+    driver.get(link)
     try:
         try:
             actual_price = driver.find_element(
@@ -89,10 +88,10 @@ for i in range(0, len(links)):
             df["Discount Price"].str.replace("Rs. ", "").str.replace(",", "")
         )
     except:
-        print(filename, links[i])
+        print(filename, link)
         pp = pd.read_csv(filename)
         df = pd.DataFrame(
-            [[today, int(pp.iloc[-1, -2]), int(pp.iloc[-1, -2])]],
+            [[today, int(pp.iloc[-1, -2]), int(pp.iloc[-1, -1])]],
             columns=["Date", "Actual Price", "Discount Price"],
         )
 
