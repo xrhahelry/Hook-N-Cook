@@ -31,19 +31,19 @@ def update_specs(row):
         specs[title] = value
 
 
-for x in range(0, len(links)):
-    if links[x] in [
+for i, link in enumerate(links):
+    if link in [
         "https://www.daraz.com.np/products/dell-precision-3430-sff-core-i7-8700-32ghz-32gb-ram-512gb-solid-state-drive-windows-11-pro-64bit-renewed-i129855105-s1037690646.html?search=1",
         "https://www.daraz.com.np/products/dell-vostro-3888-computer-set-i114454487-s1031087096.html?search=1",
         "https://www.daraz.com.np/products/dell-tiny-i5-6th-generation-8-gb-ram-256-ssd-with-mouse-keyboard-wifi-dongle-and-mouse-pad-i129272829-s1037294262.html?search=1",
     ]:
         continue
 
-    if fn[x].replace(".csv", "") in old:
-        pp = pd.read_csv("data/prices/" + fn[x])
-        data.loc[data.id == fn[x].replace(".csv", ""), "price"] = int(pp.iloc[-1, -1])
+    if fn[i].replace(".csv", "") in old:
+        pp = pd.read_csv("data/prices/" + fn[i])
+        data.loc[data.id == fn[i].replace(".csv", ""), "price"] = int(pp.iloc[-1, -1])
         data.to_csv(filepath, index=False)
-        print(x)
+        print(i)
     else:
         titles = []
         values = []
@@ -64,14 +64,14 @@ for x in range(0, len(links)):
             "name": None,
             "url": None,
         }
-        driver.get(links[x])
+        driver.get(link)
         try:
             name = driver.find_element(
                 By.XPATH, '//*[@id="module_product_title_1"]/div/div/span'
             ).text
             specs["name"] = name
-            specs["id"] = fn[x].replace(".csv", "")
-            specs["url"] = links[x]
+            specs["id"] = fn[i].replace(".csv", "")
+            specs["url"] = links[i]
             known_brands = [
                 "dell",
                 "asus",
@@ -138,7 +138,7 @@ for x in range(0, len(links)):
                             model = string + " " + split_name[i + 1]
             specs["brand"] = b
             specs["model"] = model
-            pp = pd.read_csv("data/prices/" + fn[x])
+            pp = pd.read_csv("data/prices/" + fn[i])
             specs["price"] = int(pp.iloc[-1, -1])
             driver.execute_script("window.scrollTo(0, 300)")
         except:
