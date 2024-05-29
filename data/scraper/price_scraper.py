@@ -1,12 +1,13 @@
+import hashlib
+import os
+from datetime import date
+
+import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import pandas as pd
-from datetime import date
-import os
-import hashlib
+from selenium.webdriver.support.ui import WebDriverWait
 
 options = webdriver.ChromeOptions()
 options.add_argument("--headless=new")
@@ -17,27 +18,27 @@ options.add_argument("--disk-cache-size=0")
 service = Service(executable_path="data/scraper/chromedriver.exe")
 driver = webdriver.Chrome(service=service, options=options)
 
-# links = []
-# for i in range(0, 42):
-#     url = f"https://www.daraz.com.np/laptops/?page={i}"
-#     driver.get(url)
-#     products = driver.find_elements(By.XPATH, '//*[@id="id-a-link"]')
-#     urls = [x.get_property("href") for x in products]
-#     links += urls
+links = []
+for i in range(0, 42):
+    url = f"https://www.daraz.com.np/laptops/?page={i}"
+    driver.get(url)
+    products = driver.find_elements(By.XPATH, '//*[@id="id-a-link"]')
+    urls = [x.get_property("href") for x in products]
+    links += urls
 
 
-# def generate_filename(url):
-#     hashed_url = hashlib.sha256(url.encode()).hexdigest()
-#     truncated_url = hashed_url[:10]
-#     return truncated_url
+def generate_filename(url):
+    hashed_url = hashlib.sha256(url.encode()).hexdigest()
+    truncated_url = hashed_url[:10]
+    return truncated_url
 
 
-# files = [generate_filename(url) for url in links]
-# files = [file + ".csv" for file in files]
+files = [generate_filename(url) for url in links]
+files = [file + ".csv" for file in files]
 
-# df = pd.DataFrame(list(zip(links, files)), columns=["Url", "Filename"])
-# df.drop_duplicates(inplace=True)
-# df.to_csv("data/scraper/urls.csv", index=False)
+df = pd.DataFrame(list(zip(links, files)), columns=["Url", "Filename"])
+df.drop_duplicates(inplace=True)
+df.to_csv("data/scraper/urls.csv", index=False)
 
 df = pd.read_csv("data/scraper/urls.csv")
 files = df["Filename"]
