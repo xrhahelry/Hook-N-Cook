@@ -17,33 +17,36 @@ options.add_argument("--disk-cache-size=0")
 service = Service(executable_path="data/scraper/chromedriver.exe")
 driver = webdriver.Chrome(service=service, options=options)
 
-links = []
-for i in range(0, 42):
-    url = f"https://www.daraz.com.np/laptops/?page={i}"
-    driver.get(url)
-    products = driver.find_elements(By.XPATH, '//*[@id="id-a-link"]')
-    urls = [x.get_property("href") for x in products]
-    links += urls
+# links = []
+# for i in range(0, 42):
+#     url = f"https://www.daraz.com.np/laptops/?page={i}"
+#     driver.get(url)
+#     products = driver.find_elements(By.XPATH, '//*[@id="id-a-link"]')
+#     urls = [x.get_property("href") for x in products]
+#     links += urls
 
 
-def generate_filename(url):
-    hashed_url = hashlib.sha256(url.encode()).hexdigest()
-    truncated_url = hashed_url[:10]
-    return truncated_url
+# def generate_filename(url):
+#     hashed_url = hashlib.sha256(url.encode()).hexdigest()
+#     truncated_url = hashed_url[:10]
+#     return truncated_url
 
 
-files = [generate_filename(url) for url in links]
-files = [file + ".csv" for file in files]
+# files = [generate_filename(url) for url in links]
+# files = [file + ".csv" for file in files]
 
-df = pd.DataFrame(list(zip(links, files)), columns=["Url", "Filename"])
-df.drop_duplicates(inplace=True)
-df.to_csv("data/scraper/urls.csv", index=False)
+# df = pd.DataFrame(list(zip(links, files)), columns=["Url", "Filename"])
+# df.drop_duplicates(inplace=True)
+# df.to_csv("data/scraper/urls.csv", index=False)
 
+df = pd.read_csv("data/scraper/urls.csv")
+files = df["Filename"]
 links = df["Url"]
 today = date.today()
 
 for i, link in enumerate(links):
-    print(i)
+    if i < 884:
+        continue
     if link in [
         "https://www.daraz.com.np/products/dell-precision-3430-sff-core-i7-8700-32ghz-32gb-ram-512gb-solid-state-drive-windows-11-pro-64bit-renewed-i129855105-s1037690646.html?search=1",
         "https://www.daraz.com.np/products/dell-vostro-3888-computer-set-i114454487-s1031087096.html?search=1",
@@ -87,8 +90,9 @@ for i, link in enumerate(links):
         df["Discount Price"] = (
             df["Discount Price"].str.replace("Rs. ", "").str.replace(",", "")
         )
+        print(i, filename)
     except:
-        print(filename, link)
+        print(i, filename, link)
         pp = pd.read_csv(filename)
         df = pd.DataFrame(
             [[today, int(pp.iloc[-1, -2]), int(pp.iloc[-1, -1])]],
