@@ -1,4 +1,12 @@
-def url_scraper():
+import hashlib
+
+import pandas as pd
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+
+
+def url_scraper(driver):
     links = []
     for i in range(0, 42):
         url = f"https://www.daraz.com.np/laptops/?page={i}"

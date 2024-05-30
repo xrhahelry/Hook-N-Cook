@@ -46,8 +46,6 @@ links = df["Url"]
 today = date.today()
 
 for i, link in enumerate(links):
-    if i < 884:
-        continue
     if link in [
         "https://www.daraz.com.np/products/dell-precision-3430-sff-core-i7-8700-32ghz-32gb-ram-512gb-solid-state-drive-windows-11-pro-64bit-renewed-i129855105-s1037690646.html?search=1",
         "https://www.daraz.com.np/products/dell-vostro-3888-computer-set-i114454487-s1031087096.html?search=1",

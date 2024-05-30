@@ -1,17 +1,8 @@
-import hashlib
-import os
-import re
-from datetime import date
-
-import pandas as pd
 import price
 import specs
 import url
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
 
 options = webdriver.ChromeOptions()
 options.add_argument("--headless=new")
@@ -24,9 +15,9 @@ driver = webdriver.Chrome(service=service, options=options)
 
 
 def main():
-    url.url_scraper()
-    price.price_scraper()
-    specs.specs_scraper()
+    url.url_scraper(driver)
+    price.price_scraper(driver)
+    specs.specs_scraper(driver)
 
 
 if __name__ == "__main__":

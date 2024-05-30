@@ -1,4 +1,13 @@
-def price_scraper():
+import os
+from datetime import date
+
+import pandas as pd
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+
+
+def price_scraper(driver):
     df = pd.read_csv("data/scraper/urls.csv")
     files = df["Filename"]
     links = df["Url"]
