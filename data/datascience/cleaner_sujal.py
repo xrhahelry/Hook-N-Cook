@@ -2,7 +2,7 @@ import pandas as pd
 
 laptop = pd.read_csv("data/laptop.csv")
 
-laptop.info()
+print(laptop.info())
 
 
 def clean_processor(processor):
@@ -24,22 +24,22 @@ def clean_processor(processor):
         return processor
 
 
-laptop["price"] = laptop["price"].apply(lambda x: int(x))
-laptop["cpu cores"] = laptop["cpu cores"].apply(lambda x: int(x))
-laptop["name"] = laptop["name"].apply(lambda x: str(x))
-laptop["brand"] = laptop["brand"].apply(lambda x: str(x))
-laptop.loc[laptop["ram memory"] == "1", "ram memory"] = "16"
-laptop.loc[laptop["ram memory"] == "3", "ram memory"] = "4"
-laptop.loc[laptop["ram memory"] == "Not Specified", "ram memory"] = "8"
-laptop.loc[laptop["ram memory"].isna(), "ram memory"] = "8"
-laptop["ram memory"] = laptop["ram memory"].apply(lambda x: int(x))
-laptop["display size"] = laptop["display size"].apply(lambda x: float(x))
-laptop["processor"] = laptop["processor"].apply(clean_processor)
+# laptop["price"] = laptop["price"].apply(lambda x: int(x))
+# laptop["cpu cores"] = laptop["cpu cores"].apply(lambda x: int(x))
+# laptop["name"] = laptop["name"].apply(lambda x: str(x))
+# laptop["brand"] = laptop["brand"].apply(lambda x: str(x))
+# laptop.loc[laptop["ram memory"] == "1", "ram memory"] = "16"
+# laptop.loc[laptop["ram memory"] == "3", "ram memory"] = "4"
+# laptop.loc[laptop["ram memory"] == "Not Specified", "ram memory"] = "8"
+# laptop.loc[laptop["ram memory"].isna(), "ram memory"] = "8"
+# laptop["ram memory"] = laptop["ram memory"].apply(lambda x: int(x))
+# laptop["display size"] = laptop["display size"].apply(lambda x: float(x))
+# laptop["processor"] = laptop["processor"].apply(clean_processor)
 
 # temp = laptop[['processor', 'name', 'url']]
 # temp.to_csv('temp.csv', index=False)
 # tempp = pd.read_csv("temp.csv")
 # tempp['processor'].value_counts()
 # laptop['processor'] = tempp['processor'].astype(float)
-# laptop.info()
+# print(laptop.info())
 # laptop.to_csv("data/laptop.csv", index=False)

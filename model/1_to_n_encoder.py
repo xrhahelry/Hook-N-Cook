@@ -34,4 +34,4 @@ df = df[
         "storage capacity",
     ]
 ]
-df.to_csv("model/1ton_encoded_data.csv", index=False)
+df.to_csv("model/1_to_n_encoded_data.csv", index=False)
