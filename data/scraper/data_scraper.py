@@ -42,10 +42,10 @@ for i, link in enumerate(links):
         continue
 
     if fn[i].replace(".csv", "") in old:
+        print(i, "data/prices/" + fn[i])
         pp = pd.read_csv("data/prices/" + fn[i])
         data.loc[data.id == fn[i].replace(".csv", ""), "price"] = int(pp.iloc[-1, -1])
         data.to_csv(filepath, index=False)
-        print(i)
     else:
         titles = []
         values = []
@@ -254,7 +254,7 @@ for i, link in enumerate(links):
         temp.loc[:, "Value"] = temp["Value"].str.replace("GB", "")
         temp.loc[:, "Value"] = temp["Value"].str.replace(" Inch", "")
         temp.apply(update_specs, axis=1)
-        print(specs["id"], specs["brand"], specs["model"])
+        print(i, "data/prices/" + fn[i], specs["id"], specs["brand"], specs["model"])
         dd = pd.DataFrame([specs])
         dd.to_csv(filepath, mode="a", header=not os.path.exists(filepath), index=False)
 
