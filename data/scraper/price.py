@@ -14,8 +14,6 @@ def price_scraper(driver):
     today = date.today()
 
     for i, link in enumerate(links):
-        if i < 884:
-            continue
         if link in [
             "https://www.daraz.com.np/products/dell-precision-3430-sff-core-i7-8700-32ghz-32gb-ram-512gb-solid-state-drive-windows-11-pro-64bit-renewed-i129855105-s1037690646.html?search=1",
             "https://www.daraz.com.np/products/dell-vostro-3888-computer-set-i114454487-s1031087096.html?search=1",
@@ -26,6 +24,7 @@ def price_scraper(driver):
         filename = "data/prices/" + files[i]
         driver.get(link)
         try:
+            print(i, filename)
             try:
                 actual_price = driver.find_element(
                     By.XPATH, '//*[@id="module_product_price_1"]/div/div/div/span[1]'
@@ -59,7 +58,6 @@ def price_scraper(driver):
             df["Discount Price"] = (
                 df["Discount Price"].str.replace("Rs. ", "").str.replace(",", "")
             )
-            print(i, filename)
         except:
             print(i, filename, link)
             pp = pd.read_csv(filename)
