@@ -171,7 +171,7 @@ def specs_scraper(driver):
                 specheading = driver.find_element(
                     By.XPATH, '//*[@id="module_product_detail"]/div/div[1]/div[3]/h2'
                 )
-                driver.execute_script("arguments[0].scrollIntoView();", specs)
+                driver.execute_script("arguments[0].scrollIntoView();", specheading)
                 driver.execute_script("window.scrollBy(0, -100)")
                 WebDriverWait(driver, 1).until(
                     EC.presence_of_element_located(
@@ -218,23 +218,6 @@ def specs_scraper(driver):
             temp = pd.DataFrame(list(zip(titles, values)), columns=["Title", "Value"])
             temp.loc[:, "Title"] = temp["Title"].str.replace("_", " ")
             temp.loc[:, "Title"] = temp["Title"].apply(lambda x: x.lower())
-            unwanted_data = [
-                "camera front (megapixels)",
-                "cpu speed (ghz)",
-                "wireless connectivity",
-                "input output ports",
-                "battery life",
-                "ac adapter",
-                "model no.",
-                "model",
-                "generation",
-                "condition",
-                "storage type",
-                "processor type",
-                "touch pad",
-                "operating system",
-            ]
-            temp = temp[~temp["Title"].isin(unwanted_data)]
             temp.loc[:, "Title"] = temp["Title"].str.replace(
                 "storage capacity new", "storage capacity"
             )
