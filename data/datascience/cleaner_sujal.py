@@ -4,24 +4,26 @@ laptop = pd.read_csv("data/laptop.csv")
 
 print(laptop.info())
 
+laptop = laptop.drop(columns=["graphics memory"])
+laptop.to_csv("data/lap.csv", index=False)
 
-def clean_processor(processor):
-    if "7" in processor:
-        return "7"
-    elif "5" in processor:
-        return "5"
-    elif "3" in processor:
-        return "3"
-    elif "9" in processor:
-        return "9"
-    elif "celeron" in processor.lower():
-        return "2"
-    elif "m1" in processor.lower():
-        return "6.5"
-    elif "m2" in processor.lower():
-        return "7.5"
-    else:
-        return processor
+# def clean_processor(processor):
+#     if "7" in processor:
+#         return "7"
+#     elif "5" in processor:
+#         return "5"
+#     elif "3" in processor:
+#         return "3"
+#     elif "9" in processor:
+#         return "9"
+#     elif "celeron" in processor.lower():
+#         return "2"
+#     elif "m1" in processor.lower():
+#         return "6.5"
+#     elif "m2" in processor.lower():
+#         return "7.5"
+#     else:
+#         return processor
 
 
 # laptop["price"] = laptop["price"].apply(lambda x: int(x))

@@ -51,7 +51,6 @@ def specs_scraper(driver):
                 "storage capacity": None,
                 "cpu cores": None,
                 "graphics card": None,
-                "graphics memory": None,
                 "rating": None,
                 "reviews": None,
                 "name": None,
