@@ -6,6 +6,7 @@ class User(db.Model):
     first_name = db.Column(db.String(20), unique=False, nullable=False)
     last_name = db.Column(db.String(20), unique=False, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
+    tracked_product = db.Column(db.String(32), unique=True, nullable=True)
 
     def to_json(self):
         return {
