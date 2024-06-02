@@ -31,6 +31,20 @@ def specs_scraper(driver):
             continue
 
         if fn[i].replace(".csv", "") in old:
+            driver.get(link)
+            if (
+                data.loc[data.id == fn[i].replace(".csv", ""), "image"]
+                .isna()
+                .item("image")
+            ):
+                try:
+                    img = driver.find_element(
+                        By.XPATH,
+                        '//*[@id="module_item_gallery_1"]/div/div[1]/div[1]/img',
+                    ).get_attribute("src")
+                    data.loc[data.id == fn[i].replace(".csv", ""), "image"] = str(img)
+                except:
+                    pass
             print(i, "data/prices/" + fn[i])
             pp = pd.read_csv("data/prices/" + fn[i])
             data.loc[data.id == fn[i].replace(".csv", ""), "price"] = int(
@@ -55,15 +69,20 @@ def specs_scraper(driver):
                 "reviews": None,
                 "name": None,
                 "url": None,
+                "image": None,
             }
             driver.get(link)
             try:
                 name = driver.find_element(
                     By.XPATH, '//*[@id="module_product_title_1"]/div/div/span'
                 ).text
+                img = driver.find_element(
+                    By.XPATH, '//*[@id="module_item_gallery_1"]/div/div[1]/div[1]/img'
+                ).get_attribute("src")
                 specs["name"] = name
                 specs["id"] = fn[i].replace(".csv", "")
                 specs["url"] = links[i]
+                specs["image"] = str(img)
                 known_brands = [
                     "dell",
                     "asus",
