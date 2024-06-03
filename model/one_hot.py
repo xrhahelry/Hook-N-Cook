@@ -42,7 +42,7 @@ df_enc["price"] = df_enc["price"].astype(float).astype(int)
 enc = df_enc.set_index("id")
 not_enc = df.set_index("id")
 
-choice = "012a16c221"
+choice = "5bffcd46c3"
 vector1 = enc.loc[choice, :].to_numpy()[2:]
 list1 = not_enc.loc[choice, :].tolist()
 

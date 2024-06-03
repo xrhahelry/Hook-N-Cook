@@ -19,7 +19,7 @@ for col in categorical_cols:
     unique_values = df[col].unique().tolist()
     unique_values = sorted(unique_values)
     encoder_rules[col] = {value: index + 1 for index, value in enumerate(unique_values)}
-print(encoder_rules)
+
 for key in encoder_rules:
     df[key] = df[key].replace(encoder_rules[key])
     df[key] = df[key].apply(lambda x: int(x))
@@ -46,7 +46,7 @@ df = df[
 enc = df.set_index("id")
 not_enc = laptops.set_index("id")
 
-choice = "012a16c221"
+choice = "5bffcd46c3"
 vector1 = enc.loc[choice, :].to_numpy()[2:]
 list1 = not_enc.loc[choice, :].tolist()[:-4]
 
