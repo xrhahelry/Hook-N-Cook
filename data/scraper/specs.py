@@ -66,6 +66,7 @@ def specs_scraper(driver):
                 "name": None,
                 "url": None,
                 "image": None,
+                "instock": None,
             }
             driver.get(link)
             try:
@@ -147,6 +148,7 @@ def specs_scraper(driver):
                 specs["model"] = model
                 pp = pd.read_csv("data/prices/" + fn[i])
                 specs["price"] = int(pp.iloc[-1, -1])
+                specs["instock"] = "yes"
                 driver.execute_script("window.scrollTo(0, 300)")
             except:
                 continue
