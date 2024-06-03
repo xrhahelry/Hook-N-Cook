@@ -4,7 +4,13 @@ import pandas as pd
 unclean_data = pd.read_csv("data/laptop.csv")
 
 non_categorical_cols = ["id", "price", "brand", "model"]
-categorical_cols = ["processor", "ram memory", "display size", "storage capacity"]
+categorical_cols = [
+    "processor",
+    "ram memory",
+    "display size",
+    "storage capacity",
+    "cpu cores",
+]
 reorder = [
     "id",
     "brand",
@@ -14,6 +20,7 @@ reorder = [
     "ram memory",
     "display size",
     "storage capacity",
+    "cpu cores",
 ]
 
 df = unclean_data[reorder]
