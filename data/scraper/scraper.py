@@ -15,8 +15,8 @@ driver = webdriver.Chrome(service=service, options=options)
 
 
 def main():
-    url.url_scraper(driver)
-    price.price_scraper(driver)
+    # url.url_scraper(driver)
+    # price.price_scraper(driver)
     specs.specs_scraper(driver)
 
 
