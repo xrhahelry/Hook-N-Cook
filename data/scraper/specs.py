@@ -32,11 +32,7 @@ def specs_scraper(driver):
 
         if fn[i].replace(".csv", "") in old:
             driver.get(link)
-            if (
-                data.loc[data.id == fn[i].replace(".csv", ""), "image"]
-                .isna()
-                .item("image")
-            ):
+            if data.loc[data.id == fn[i].replace(".csv", ""), "image"].isna().item():
                 try:
                     img = driver.find_element(
                         By.XPATH,
