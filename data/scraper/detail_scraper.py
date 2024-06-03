@@ -61,7 +61,7 @@ for i, (link, cpu_core, name) in enumerate(zip(urls, cpu_cores, names)):
 details_df = pd.DataFrame(details_list, columns=['details', 'name', 'cpu_cores', 'url'])
 
 # Save the DataFrame to CSV
-details_df.to_csv('detailed_df.csv', index=False)
+details_df.to_csv('detailed_cores.csv', index=False)
 
 # Quit the driver
 driver.quit()

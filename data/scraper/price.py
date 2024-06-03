@@ -9,6 +9,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 def price_scraper(driver):
     df = pd.read_csv("data/scraper/urls.csv")
+    dd = pd.read_csv("data/laptop.csv")
     files = df["Filename"]
     links = df["Url"]
     today = date.today()
@@ -58,6 +59,7 @@ def price_scraper(driver):
             df["Discount Price"] = (
                 df["Discount Price"].str.replace("Rs. ", "").str.replace(",", "")
             )
+            stock = "yes"
         except:
             print(i, filename, link)
             pp = pd.read_csv(filename)
@@ -65,5 +67,7 @@ def price_scraper(driver):
                 [[today, int(pp.iloc[-1, -2]), int(pp.iloc[-1, -1])]],
                 columns=["Date", "Actual Price", "Discount Price"],
             )
+            stock = "no"
 
         df.to_csv(filename, mode="a", header=not os.path.exists(filename), index=False)
+        dd.loc[dd.id == files[i].replace(".csv", ""), "instock"] = stock
