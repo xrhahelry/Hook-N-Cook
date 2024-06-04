@@ -21,14 +21,13 @@ for col in categorical_cols:
     encoder_rules[col] = {value: index + 1 for index, value in enumerate(unique_values)}
 
 for key in encoder_rules:
-    df[key] = df[key].replace(encoder_rules[key])
-    df[key] = df[key].apply(lambda x: int(x))
+    df.loc[:, key] = df.loc[:, key].map(encoder_rules[key]).astype(int)
 
+df["price"] = df["price"].astype(float)
 max = df["price"].max()
 min = df["price"].min()
-df["price"] = df["price"].apply(lambda x: (x - min) / (max - min))
-df["price"] = df["price"].apply(lambda x: x * 100)
-df["price"] = df["price"].astype(float).astype(int)
+df.loc[:, "price"] = (df.loc[:, "price"] - min) / (max - min)
+df.loc[:, "price"] = (df.loc[:, "price"] * 100).astype(int)
 df = df[
     [
         "id",

@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-unclean_data = pd.read_csv("data/laptop.csv")
+laptops = pd.read_csv("data/laptop.csv")
 
 non_categorical_cols = ["id", "price", "brand", "model"]
 categorical_cols = [
@@ -23,7 +23,7 @@ reorder = [
     "cpu cores",
 ]
 
-df = unclean_data[reorder]
+df = laptops[reorder]
 
 df_enc = pd.get_dummies(df, columns=categorical_cols)
 
@@ -40,11 +40,11 @@ df_enc["price"] = df_enc["price"].apply(lambda x: x * 100)
 df_enc["price"] = df_enc["price"].astype(float).astype(int)
 
 enc = df_enc.set_index("id")
-not_enc = df.set_index("id")
+not_enc = laptops.set_index("id")
 
 choice = "5bffcd46c3"
 vector1 = enc.loc[choice, :].to_numpy()[2:]
-list1 = not_enc.loc[choice, :].tolist()
+list1 = not_enc.loc[choice, :].tolist()[:-4]
 
 for id, data in enc.iterrows():
     if id == choice:
@@ -53,7 +53,7 @@ for id, data in enc.iterrows():
     distance = np.linalg.norm(vector1 - vector2)
 
     if distance <= 3:
-        list2 = not_enc.loc[id, :].tolist()
+        list2 = not_enc.loc[id, :].tolist()[:-4]
         print(distance)
         print(list1)
         print(list2)
