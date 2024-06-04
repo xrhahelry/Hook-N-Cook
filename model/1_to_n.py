@@ -4,7 +4,13 @@ import pandas as pd
 laptops = pd.read_csv("data/laptop.csv")
 
 non_categorical_cols = ["id", "price", "brand", "model"]
-categorical_cols = ["processor", "ram memory", "display size", "storage capacity"]
+categorical_cols = [
+    "processor",
+    "ram memory",
+    "display size",
+    "storage capacity",
+    "cpu cores",
+]
 
 df = laptops[non_categorical_cols + categorical_cols]
 
@@ -15,14 +21,13 @@ for col in categorical_cols:
     encoder_rules[col] = {value: index + 1 for index, value in enumerate(unique_values)}
 
 for key in encoder_rules:
-    df[key] = df[key].replace(encoder_rules[key])
-    df[key] = df[key].apply(lambda x: int(x))
+    df.loc[:, key] = df.loc[:, key].map(encoder_rules[key]).astype(int)
 
+df["price"] = df["price"].astype(float)
 max = df["price"].max()
 min = df["price"].min()
-df["price"] = df["price"].apply(lambda x: (x - min) / (max - min))
-df["price"] = df["price"].apply(lambda x: x * 100)
-df["price"] = df["price"].astype(float).astype(int)
+df.loc[:, "price"] = (df.loc[:, "price"] - min) / (max - min)
+df.loc[:, "price"] = (df.loc[:, "price"] * 100).astype(int)
 df = df[
     [
         "id",
@@ -33,13 +38,14 @@ df = df[
         "ram memory",
         "display size",
         "storage capacity",
+        "cpu cores",
     ]
 ]
 
 enc = df.set_index("id")
 not_enc = laptops.set_index("id")
 
-choice = "012a16c221"
+choice = "5bffcd46c3"
 vector1 = enc.loc[choice, :].to_numpy()[2:]
 list1 = not_enc.loc[choice, :].tolist()[:-4]
 
