@@ -11,6 +11,12 @@ decorator @ file:///home/conda/feedstock_root/build_artifacts/decorator_16415556
 exceptiongroup @ file:///home/conda/feedstock_root/build_artifacts/exceptiongroup_1704921103267/work
 executing @ file:///home/conda/feedstock_root/build_artifacts/executing_1698579936712/work
 fonttools==4.51.0
+Flask==3.0.3
+Flask-Bcrypt==1.0.1
+Flask-Login==0.6.3
+Flask-Migrate==4.0.7
+Flask-SQLAlchemy==3.1.1
+Flask-WTF==1.2.1
 h11==0.14.0
 idna==3.7
 importlib_metadata @ file:///home/conda/feedstock_root/build_artifacts/importlib-metadata_1710971335535/work
