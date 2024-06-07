@@ -1,38 +1,60 @@
-from flask import Blueprint
-from flask import render_template, request
+from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, current_user, login_required
+from flask_wtf import FlaskForm
+from flask_bcrypt import Bcrypt
 
+from .models import User
+from . import db
 
 auth = Blueprint("auth", __name__)
+bcrypt = Bcrypt()
 
+@auth.route("/signup", methods=['GET', 'POST'])
+def signup():
+    if request.method == 'GET':
+        return render_template('signup.html')
+    elif request.method == 'POST':
+        username = request.form.get('username')
+        email = request.form.get('email')
+        password = request.form.get('password')
 
-@auth.route("/login/<uid>")
-def login(request):
-    if request.method == "POST":
+        hashed_password = bcrypt.generate_password_hash(password)
 
-        # Attempt to sign user in
-        username = request.POST["username"]
-        password = request.POST["password"]
-        user = authenticate(request, username=username, password=password)
+        user = User(username=username, email=email, password=password)
 
-        # Check if authentication successful
-        if user is not None:
-            login(request, user)
-            return HttpResponseRedirect(reverse("base"))
+        db.session.add(user)
+        db.session.commit()
+
+        login_user(user, remember=True)
+        return redirect(url_for('views.home'))
+
+    return render_template('signup.html')
+
+@auth.route("/login", methods=['GET', 'POST'])
+def login():
+    if request.method == 'GET':
+        return render_template('login.html')
+    elif request.method == 'POST':
+        username = request.form.get('username')
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        user = User.query.filter_by(username=username).first()  
+
+        if bcrypt.check_password_hash(user.password, password):
+            login_user(user, remember=True)
+            return redirect(url_for('views.home'))
         else:
-            return render(request, "login.html", {
-                "message": "Invalid username and/or password."
-            })
-    else:
-        return render(request, "login.html")
+            flash('Invalid email or password', 'error')
+            return render_template('login.html')  
 
-
+    return render_template('login.html')
 
 @auth.route("/logout")
+@login_required
 def logout():
-    return "<h1>Logout</h1>"
+    logout_user()
+    return redirect(url_for('views.home'))
 
-
-@auth.route("/register")
-def signup():
-    return "<h1>Sign up</h1>"
+def register_routes(app, db):
+    app.register_blueprint(auth)
