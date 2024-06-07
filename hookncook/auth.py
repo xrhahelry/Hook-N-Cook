@@ -20,7 +20,7 @@ def signup():
 
         hashed_password = bcrypt.generate_password_hash(password)
 
-        user = User(username=username, email=email, password=password)
+        user = User(username=username, email=email, password=hashed_password)
 
         db.session.add(user)
         db.session.commit()
