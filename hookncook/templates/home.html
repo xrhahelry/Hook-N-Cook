@@ -45,32 +45,34 @@
             </div>
             {% endfor %}
         </div>
-        <label for="dropdown_level">Select Recommendation Level</label>
-        <select class="form-control" id="dropdown_level" name="dropdown_level">
-            <option value="">Choose...</option>
-            {% for level in levels %}
-            <option value="{{ levels[level] }}">{{ level }}</option>
-            {% endfor %}
-        </select>
+        <div class="form-group">
+            <label for="dropdown_level">Select Recommendation Level</label>
+            <select class="form-control" id="dropdown_level" name="dropdown_level">
+                <option value="">Choose...</option>
+                {% for level in levels %}
+                <option value="{{ levels[level] }}">{{ level }}</option>
+                {% endfor %}
+            </select>
+        </div>
 
-        <div class="form-group" align="center">
+        <div align="center">
             <button type="submit" class="btn btn-primary">Submit</button>
         </div>
     </form>
 
     {% if searched_items%}
-    <h2>Searched Items:</h2>
+    <h2>Recommended Items:</h2>
     <div class="container mt-5">
         <div class="row">
             {% for product in searched_items %}
             <div class="col-md-4">
                 <div class="card product-card">
-                    <a href="{{ product.url }}">
+                    <a href="{{ url_for('views.product', product_id=product.id) }}">
                         <img src="{{ product.image }}" class="card-img-top" alt="{{ product.name }}">
                     </a>
                     <div class="card-body">
                         <h5 class="card-title">
-                            <a href="{{ product.url }}">{{ product.name }}</a>
+                            <a href="{{ url_for('views.product', product_id=product.id) }}">{{ product.name }}</a>
                         </h5>
                         <p class="card-text" style="font-size: 20px">
                         <b>Rs.{{ product.price }}</b>

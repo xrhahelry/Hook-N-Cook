@@ -1,3 +1,5 @@
+import pandas as pd
+import plotly.express as px
 from flask import Blueprint, render_template, request
 
 from model import one_hot
@@ -102,3 +104,17 @@ def home():
     return render_template(
         "home.html", columns=columns, searched_items=searched_items, levels=levels
     )
+
+
+@views.route("/product/<product_id>")
+def product(product_id):
+    laptop = pd.read_csv("data/laptop.csv")
+    data = laptop.set_index("id")
+    product = data.loc[product_id, :]
+    history = pd.read_csv(f"data/prices/{product_id}.csv")
+    history["Date"] = pd.to_datetime(history["Date"])
+    figure = px.line(history, x="Date", y="Discount Price", title="Price vs Date")
+    figure.update_yaxes(title_text="Price")
+    history_html = figure.to_html(full_html=False)
+
+    return render_template("product.html", product=product, history=history_html)
