@@ -1,1 +1,45 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %}
+{% block body %}
+<div class="container mt-5">
+  <h1>What are you looking for?</h1>
+  <form method="POST">
+    <div class="row">
+      <div class="form-group">
+        <label for="text_input">Enter Price</label>
+        <input type="text" class="form-control" id="price_input" name="price_input" placeholder="Enter budget">
+      </div>
+      {% for column in  columns %}
+        <div class="col-md-3 mb-3">
+          <label for="dropdown_{{ column }}">Select {{ column }}</label>
+          <select class="form-control" id="dropdown_{{ column }}" name="dropdown_{{ column }}">
+            <option value="">Choose...</option>
+            {% for item in columns[column]%}
+              <option value="{{ columns[column][item] }}">{{ item }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      {% endfor %}
+    </div>
+    <label for="dropdown_level">Select Recommendation Level</label>
+      <select class="form-control" id="dropdown_level" name="dropdown_level">
+        <option value="">Choose...</option>
+        {% for level in levels %}
+          <option value="{{ levels[level] }}">{{ level }}</option>
+        {% endfor %}
+      </select>
+
+    <div align="center">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+  </form>
+
+  {% if searched_items%}
+    <h2>Searched Items:</h2>
+    <ul class="list-group mt-3">
+      {% for item in searched_items%}
+        <li class="list-group-item">{{ item }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</div>
+{% endblock %}
