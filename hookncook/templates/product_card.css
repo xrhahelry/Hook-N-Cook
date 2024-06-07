@@ -1,0 +1,21 @@
+.product-card {
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 15px;
+}
+.product-card .card-title a {
+  color: blue;
+  text-decoration: none;
+}
+.product-card .card-text {
+  color: red;
+}
+.btn-link {
+  color: #007bff;
+  text-decoration: underline;
+}
+.btn-link:hover {
+  color: #0056b3;
+  text-decoration: none;
+}

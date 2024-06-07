@@ -60,10 +60,10 @@ def one_hot(selected_item, limit):
         distance = np.linalg.norm(vector1 - vector2)
 
         if distance <= limit:
-            list2 = not_enc.loc[id, :].tolist()
-            if str(list2[-1]) == "yes":
-                list2.append(distance)
-                recomm.append(list2)
+            product = not_enc.loc[id, :].to_dict()
+            product["id"] = id
+            if product["instock"] == "yes":
+                recomm.append(product)
 
-    recomm = sorted(recomm, key=lambda x: x[0])
+    recomm = sorted(recomm, key=lambda x: x["price"])
     return recomm

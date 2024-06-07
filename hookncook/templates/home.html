@@ -1,45 +1,87 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %}
+{% block styles%}
+<style>
+    .product-card {
+        border: 2px solid #ddd;
+        border-radius: 5px;
+        overflow: hidden;
+        margin-bottom: 15px;
+    }
+    .product-card .card-title a {
+        color: blue;
+        text-decoration: none;
+    }
+    .product-card .card-text {
+        color: red;
+    }
+    .btn-link {
+        color: #007bff;
+        text-decoration: underline;
+    }
+    .btn-link:hover {
+        color: #0056b3;
+        text-decoration: none;
+    }
+</style>
+{% endblock %}
 {% block body %}
 <div class="container mt-5">
-  <h1>What are you looking for?</h1>
-  <form method="POST">
-    <div class="row">
-      <div class="form-group">
-        <label for="text_input">Enter Price</label>
-        <input type="text" class="form-control" id="price_input" name="price_input" placeholder="Enter budget">
-      </div>
-      {% for column in  columns %}
-        <div class="col-md-3 mb-3">
-          <label for="dropdown_{{ column }}">Select {{ column }}</label>
-          <select class="form-control" id="dropdown_{{ column }}" name="dropdown_{{ column }}">
-            <option value="">Choose...</option>
-            {% for item in columns[column]%}
-              <option value="{{ columns[column][item] }}">{{ item }}</option>
+    <h1>What are you looking for?</h1>
+    <form method="POST">
+        <div class="row">
+            <div class="form-group">
+                <label for="text_input">Enter Price</label>
+                <input type="text" class="form-control" id="price_input" name="price_input" placeholder="Enter budget">
+            </div>
+            {% for column in  columns %}
+            <div class="col-md-3 mb-3">
+                <label for="dropdown_{{ column }}">Select {{ column }}</label>
+                <select class="form-control" id="dropdown_{{ column }}" name="dropdown_{{ column }}">
+                    <option value="">Choose...</option>
+                    {% for item in columns[column]%}
+                    <option value="{{ columns[column][item] }}">{{ item }}</option>
+                    {% endfor %}
+                </select>
+            </div>
             {% endfor %}
-          </select>
         </div>
-      {% endfor %}
-    </div>
-    <label for="dropdown_level">Select Recommendation Level</label>
-      <select class="form-control" id="dropdown_level" name="dropdown_level">
-        <option value="">Choose...</option>
-        {% for level in levels %}
-          <option value="{{ levels[level] }}">{{ level }}</option>
-        {% endfor %}
-      </select>
+        <label for="dropdown_level">Select Recommendation Level</label>
+        <select class="form-control" id="dropdown_level" name="dropdown_level">
+            <option value="">Choose...</option>
+            {% for level in levels %}
+            <option value="{{ levels[level] }}">{{ level }}</option>
+            {% endfor %}
+        </select>
 
-    <div align="center">
-      <button type="submit" class="btn btn-primary">Submit</button>
-    </div>
-  </form>
+        <div class="form-group" align="center">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
 
-  {% if searched_items%}
+    {% if searched_items%}
     <h2>Searched Items:</h2>
-    <ul class="list-group mt-3">
-      {% for item in searched_items%}
-        <li class="list-group-item">{{ item }}</li>
-      {% endfor %}
-    </ul>
-  {% endif %}
+    <div class="container mt-5">
+        <div class="row">
+            {% for product in searched_items %}
+            <div class="col-md-4">
+                <div class="card product-card">
+                    <a href="{{ product.url }}">
+                        <img src="{{ product.image }}" class="card-img-top" alt="{{ product.name }}">
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="{{ product.url }}">{{ product.name }}</a>
+                        </h5>
+                        <p class="card-text">
+                        Rs.{{ product.price }}
+                        <a href="{{ product.url }}" class="btn btn-link">Go to Daraz</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}
