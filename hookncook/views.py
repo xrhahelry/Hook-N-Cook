@@ -110,7 +110,8 @@ def home():
 def product(product_id):
     laptop = pd.read_csv("data/laptop.csv")
     data = laptop.set_index("id")
-    product = data.loc[product_id, :]
+    product = data.loc[product_id, :].to_dict()
+    product["id"] = product_id
     history = pd.read_csv(f"data/prices/{product_id}.csv")
     history["Date"] = pd.to_datetime(history["Date"])
     figure = px.line(history, x="Date", y="Discount Price", title="Price vs Date")
