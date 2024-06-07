@@ -45,8 +45,10 @@ def login():
             login_user(user, remember=True)
             return redirect(url_for('views.home'))
         else:
-            flash('Invalid email or password', 'error')
-            return render_template('login.html')  
+            return render_template('login.html', {
+                "message": "Invalid username and/or password."
+            })  
+
 
     return render_template('login.html')
 
