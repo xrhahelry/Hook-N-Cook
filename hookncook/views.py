@@ -69,6 +69,31 @@ def home():
             "20": 20,
             "24": 24,
         },
+        "graphics": {
+            "No Graphics Card": 0,
+            "Integrated Graphics Card": 1000,
+            "GTX 1050": 1050,
+            "MX 330": 1300,
+            "MX 350": 1300,
+            "MX 450": 1400,
+            "MX 550": 1500,
+            "GTX 1650 Ti": 1650,
+            "GTX 1660": 1660,
+            "Radeon 2000": 2000,
+            "RTX 2040": 2040,
+            "Iris Xe": 2050,
+            "RTX 2060": 2060,
+            "RTX 2070": 2070,
+            "M1 Integrated Card": 2500,
+            "M2 Integrated Card": 2800,
+            "M3 Integrated Card": 2900,
+            "RTX 3050": 3050,
+            "RTX 3060": 3060,
+            "RTX 3070": 3070,
+            "RTX 4050": 4050,
+            "RTX 4060": 4060,
+            "RTX 4070": 4070,
+        },
     }
     selected_items = {
         "id": "00000",
@@ -80,8 +105,16 @@ def home():
         "display size": None,
         "storage capacity": None,
         "cpu cores": None,
+        "graphics card": None,
     }
-    cols = ["processor", "ram memory", "display size", "storage capacity", "cpu cores"]
+    cols = [
+        "processor",
+        "ram memory",
+        "display size",
+        "storage capacity",
+        "cpu cores",
+        "graphics card",
+    ]
     searched_items = []
     price_input = ""
     levels = {
@@ -110,7 +143,8 @@ def home():
 def product(product_id):
     laptop = pd.read_csv("data/laptop.csv")
     data = laptop.set_index("id")
-    product = data.loc[product_id, :]
+    product = data.loc[product_id, :].to_dict()
+    product["id"] = product_id
     history = pd.read_csv(f"data/prices/{product_id}.csv")
     history["Date"] = pd.to_datetime(history["Date"])
     figure = px.line(history, x="Date", y="Discount Price", title="Price vs Date")

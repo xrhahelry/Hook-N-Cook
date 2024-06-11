@@ -13,6 +13,7 @@ def one_hot(selected_item, limit):
         "display size",
         "storage capacity",
         "cpu cores",
+        "graphics card",
     ]
     reorder = [
         "id",
@@ -24,6 +25,7 @@ def one_hot(selected_item, limit):
         "display size",
         "storage capacity",
         "cpu cores",
+        "graphics card",
     ]
 
     df = laptops[reorder]
