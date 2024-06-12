@@ -16,7 +16,17 @@ block styles %}
         alt="{{ product.name }}"
       />
       <p class="mt-3 price-red">Price: Rs.{{ product.price }}</p>
-      <button type="submit" class="btn btn-primary">Track</button>
+
+      {% if product.id in current_user.tracked_products %}
+      <form method="POST" action="{{ url_for('views.untrack_product', product_id=product.id) }}">
+          <button type="submit" class="btn btn-danger">Untrack</button>
+      </form>
+      {% else %}
+      <form method="POST" action="{{ url_for('views.track_product', product_id=product.id) }}">
+          <button type="submit" class="btn btn-primary">Track</button>
+      </form>
+      {% endif %}
+      
     </div>
     <div class="col-md-8">
       <table class="table mt-3">

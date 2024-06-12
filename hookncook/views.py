@@ -1,7 +1,10 @@
 import pandas as pd
 import plotly.express as px
-from flask import Blueprint, render_template, request
-
+from flask import Blueprint, render_template, request, redirect, url_for
+from flask_login import current_user, login_required
+from . import db
+from .models import User
+import json
 from model import one_hot
 
 views = Blueprint("views", __name__)
@@ -152,3 +155,24 @@ def product(product_id):
     history_html = figure.to_html(full_html=False)
 
     return render_template("product.html", product=product, history=history_html)
+
+
+@views.route("/track_product/<product_id>", methods=["POST"])
+@login_required
+def track_product(product_id):
+    current_user.add_tracked_product(product_id)
+    return redirect(url_for("views.product", product_id=product_id))
+
+@views.route("/untrack_product/<product_id>", methods=["POST"])
+@login_required
+def untrack_product(product_id):
+    current_user.remove_tracked_product(product_id)
+    return redirect(url_for("views.product", product_id=product_id))
+
+@views.route("/tracked_products")
+@login_required
+def tracked_products():
+    tracked_product_ids = json.loads(current_user.tracked_products)
+    laptop_data = pd.read_csv("data/laptop.csv")
+    tracked_products = laptop_data[laptop_data['id'].isin(tracked_product_ids)].to_dict(orient='records')
+    return render_template("tracked_products.html", tracked_products=tracked_products)

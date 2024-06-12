@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Tracked Products{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1>Tracked Products</h1>
+    <div class="row">
+        {% for product in tracked_products %}
+        <div class="col-md-4">
+            <div class="card product-card">
+                <a href="{{ url_for('views.product', product_id=product.id) }}">
+                    <img src="{{ product.image }}" class="card-img-top" alt="{{ product.name }}">
+                </a>
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <a href="{{ url_for('views.product', product_id=product.id) }}">{{ product.name }}</a>
+                    </h5>
+                    <p class="card-text" style="font-size: 20px">
+                        <b>Rs.{{ product.price }}</b>
+                        <a href="{{ product.url }}" class="btn btn-link">Go to Daraz</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
