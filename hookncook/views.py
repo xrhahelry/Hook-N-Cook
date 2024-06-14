@@ -1,11 +1,14 @@
+import json
+
 import pandas as pd
 import plotly.express as px
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
+
+from model import one_hot, one_n
+
 from . import db
 from .models import User
-import json
-from model import one_hot
 
 views = Blueprint("views", __name__)
 
@@ -17,11 +20,11 @@ def home():
             "ancient processor": 2,
             "i3 or Ryzen 3": 3,
             "i5 or Ryzen 5": 5,
-            "i7 or Ryzen 7": 7,
-            "i9 or Ryzen 9": 9,
             "M1": 6.5,
+            "i7 or Ryzen 7": 7,
             "M2": 7.5,
             "M3": 8.5,
+            "i9 or Ryzen 9": 9,
         },
         "Ram": {
             "4 GB": 4,
@@ -127,6 +130,7 @@ def home():
         "Low Similarity": 4,
         "No Match": 8,
     }
+    models = {"One Hot": 0, "One N": 1}
 
     if request.method == "POST":
         price_input = request.form.get("price_input", "")
@@ -136,9 +140,17 @@ def home():
             if selected_item:
                 selected_items[cols[c]] = selected_item
         limit = request.form.get("dropdown_level", "3")
-        searched_items = one_hot.one_hot(selected_items, int(limit))
+        method = request.form.get("dropdown_model", "")
+        if int(method) == 0:
+            searched_items = one_hot.one_hot(selected_items, int(limit))
+        else:
+            searched_items = one_n.one_n(selected_items, int(limit))
     return render_template(
-        "home.html", columns=columns, searched_items=searched_items, levels=levels
+        "home.html",
+        columns=columns,
+        searched_items=searched_items,
+        levels=levels,
+        models=models,
     )
 
 
@@ -163,16 +175,20 @@ def track_product(product_id):
     current_user.add_tracked_product(product_id)
     return redirect(url_for("views.product", product_id=product_id))
 
+
 @views.route("/untrack_product/<product_id>", methods=["POST"])
 @login_required
 def untrack_product(product_id):
     current_user.remove_tracked_product(product_id)
     return redirect(url_for("views.product", product_id=product_id))
 
+
 @views.route("/tracked_products")
 @login_required
 def tracked_products():
     tracked_product_ids = json.loads(current_user.tracked_products)
     laptop_data = pd.read_csv("data/laptop.csv")
-    tracked_products = laptop_data[laptop_data['id'].isin(tracked_product_ids)].to_dict(orient='records')
+    tracked_products = laptop_data[laptop_data["id"].isin(tracked_product_ids)].to_dict(
+        orient="records"
+    )
     return render_template("tracked_products.html", tracked_products=tracked_products)
