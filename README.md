@@ -1,18 +1,36 @@
 # Hook N Cook
-Hook N Cook is a web scraping and data science project that aims to scrape the data of all the laptops available on daraz.com.np store them into csv files and give the best deals.
-Also with enough data we can also predict if a products prices are going to drop or rise.
-This feature is essential because we want to give the user the ability to track a certain product if he want to buy it but is willing to wait incase the prices drop.
+HookNCook is a laptop recommendation system that uses data from [daraz](https://daraz.com.np). HookNCook scrapes laptop specifications and daily price data. All data is stored in csv files for faster access and easier distribution. HookNCook’s recommendation models use simple vector distances to recommend laptops closest to the given parameters.
+## High level overview of the project structure
+#### 1. Scraper
+Web Scraper that scrapes daraz’s data using selenium. detail_scraper is used for data cleaning.
+#### 2. Data
+Actual data scraped by scrapers
+#### 3. Preparation
+Data cleaning and analysis using pandas and seaborn. We have also answered 4 research questions. You can take a look yourself but if don’t want to then the main conclusion is that the laptops with the best money and specs ratio can be found in 1,00,000 to 2,00,000 range after 2,00,000 you may want to consider buying a PC.
+#### 4. Model
+Recommendation models using pandas and numpy.
+#### 5. Hookncook
+Flask web app that handles the website frontend and backend. Flask also handles user authentication.
+#### 6. Instance
+Database instance used by flask for user authentication.
 ## Datasets Schema
-The starting point of this project is the urls of each laptop on daraz they can be found on the file urls_and_filenames.csv along with the unique filenames for each url to store the long term price data.
-![](https://i.imgur.com/TNQzCBe.png)
+There are 3 kinds of data scraped by the project.
+### urls.csv
+This acts like a map for the project to look for products online and offline and it also contains encrypted filenames later used as primary key.
+![](https://i.imgur.com/c4fYBrV.png)
+### laptop.csv
+Dataset of laptops available in daraz.
+![](https://i.imgur.com/Swjm3in.png)
+### prices/{filename}.csv
+Prices data of particular laptops.
 
-It looks something like this.
-Then the price data of each products looks like this.
-![](https://i.imgur.com/Kdgh9do.png)
+![](https://i.imgur.com/RtFCqMF.png)
 
-Right now the file is very short but it will have many more rows.
-Lastly the actual dataset that we will be creating which will have all the data about laptops available on daraz look like this.
-![](https://i.imgur.com/9eseS6t.png)
+Data of Dell vostro 3520.
+## Models
+In both models we only use the price and categorical columns of laptop.csv for recommendations. The other columns are used by flask for frontend and redirecting to daraz.
+In both models the price column is min-max normalized.
+1. One Hot: Categorical columns are one hot encoded.
+2. One N: Categorical columns are label encoded.
 
-## Recommendation model
-After the data has been collected and cleaned we can begin the actual project of recommending the best laptop tailored to each user in the current market.
+After the ecoding finishes we also encoded the user input and use numpy to find the vector distances and recommend the laptops closest to the input vector.
