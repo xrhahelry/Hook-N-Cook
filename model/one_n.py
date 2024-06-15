@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 
-def one_n(selected_item, limit):
+def one_n(selected_item, limit, sort, num):
     laptops = pd.read_csv("data/laptop.csv")
     recomm = []
     non_categorical_cols = ["id", "price", "brand", "model"]
@@ -149,8 +149,12 @@ def one_n(selected_item, limit):
         if distance <= limit:
             product = not_enc.loc[id, :].to_dict()
             product["id"] = id
+            product["distance"] = distance
             if product["instock"] == "yes":
                 recomm.append(product)
 
-    recomm = sorted(recomm, key=lambda x: x["price"])
-    return recomm
+    recomm = sorted(recomm, key=lambda x: x[sort])
+    if num == -1:
+        return recomm
+    else:
+        return recomm[:num]

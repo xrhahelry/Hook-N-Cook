@@ -50,7 +50,7 @@
             {% endfor %}
         </div>
         <div class="row">
-            <div class="col-md-6 mb-3">
+            <div class="col-md-3 mb-3">
                 <label for="dropdown_model">Select Recommendation Model</label>
                 <select class="form-control" id="dropdown_model" name="dropdown_model">
                     <option value="">Choose...</option>
@@ -59,12 +59,30 @@
                     {% endfor %}
                 </select>
             </div>
-            <div class="col-md-6 mb-3">
+            <div class="col-md-3 mb-3">
                 <label for="dropdown_level">Select Recommendation Level</label>
                 <select class="form-control" id="dropdown_level" name="dropdown_level">
                     <option value="">Choose...</option>
                     {% for level in levels %}
                     <option value="{{ levels[level] }}">{{ level }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="dropdown_num">How many Recommendations?</label>
+                <select class="form-control" id="dropdown_num" name="dropdown_num">
+                    <option value="">Choose...</option>
+                    {% for num in numbers %}
+                    <option value="{{ numbers[num] }}">{{ num }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="dropdown_sort">Sort By</label>
+                <select class="form-control" id="dropdown_sort" name="dropdown_sort">
+                    <option value="">Choose...</option>
+                    {% for sort in sorts %}
+                    <option value="{{ sorts[sort] }}">{{ sort }}</option>
                     {% endfor %}
                 </select>
             </div>

@@ -131,7 +131,8 @@ def home():
         "No Match": 8,
     }
     models = {"One Hot": 0, "One N": 1}
-
+    numbers = {"No limit": -1, "5": 5, "10": 10, "20": 20}
+    sorts = {"Price": "price", "Similarity": "distance"}
     if request.method == "POST":
         price_input = request.form.get("price_input", "")
         selected_items["price"] = int(price_input)
@@ -141,16 +142,24 @@ def home():
                 selected_items[cols[c]] = selected_item
         limit = request.form.get("dropdown_level", "3")
         method = request.form.get("dropdown_model", "")
+        sort = request.form.get("dropdown_sort", "")
+        num = request.form.get("dropdown_num", "")
         if int(method) == 0:
-            searched_items = one_hot.one_hot(selected_items, int(limit))
+            searched_items = one_hot.one_hot(
+                selected_items, int(limit), str(sort), int(num)
+            )
         else:
-            searched_items = one_n.one_n(selected_items, int(limit))
+            searched_items = one_n.one_n(
+                selected_items, int(limit), str(sort), int(num)
+            )
     return render_template(
         "home.html",
         columns=columns,
         searched_items=searched_items,
         levels=levels,
         models=models,
+        numbers=numbers,
+        sorts=sorts,
     )
 
 
