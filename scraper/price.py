@@ -14,6 +14,8 @@ def price_scraper(driver):
     today = date.today()
 
     for i, link in enumerate(links):
+        if i < 233:
+            continue
         data = pd.read_csv("data/laptop.csv")
         if link in [
             "https://www.daraz.com.np/products/dell-precision-3430-sff-core-i7-8700-32ghz-32gb-ram-512gb-solid-state-drive-windows-11-pro-64bit-renewed-i129855105-s1037690646.html?search=1",

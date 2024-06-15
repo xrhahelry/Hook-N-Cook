@@ -10,17 +10,21 @@
         overflow: hidden;
         margin-bottom: 15px;
     }
+
     .product-card .card-title a {
         color: blue;
         text-decoration: none;
     }
+
     .product-card .card-text {
         color: red;
     }
+
     .btn-link {
         color: #007bff;
         text-decoration: underline;
     }
+
     .btn-link:hover {
         color: #0056b3;
         text-decoration: none;
@@ -100,7 +104,7 @@
             <div class="col-md-4">
                 <div class="card product-card">
                     <a href="{{ url_for('views.product', product_id=product.id) }}">
-                        <img src="{{ product.image }}" class="card-img-top" alt="{{ product.name }}">
+                        <img src="{{ product.image if product.image else https://st4.depositphotos.com/14953852/24787/v/450/depositphotos_247872612-stock-illustration-no-image-available-icon-vector.jpg }}" class="card-img-top" alt="Product Image">
                     </a>
                     <div class="card-body">
                         <h5 class="card-title">
