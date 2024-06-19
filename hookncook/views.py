@@ -132,7 +132,16 @@ def home():
     }
     models = {"One Hot": 0, "One N": 1}
     numbers = {"No limit": -1, "5": 5, "10": 10, "20": 20}
-    sorts = {"Price": "price", "Similarity": "distance"}
+    sorts = {
+        "Price": "price",
+        "Similarity": "distance",
+        "Graphics Card": "graphics card",
+        "Processor": "processor",
+        "No. of Cores": "cpu cores",
+        "Ram": "ram memory",
+        "Display Size": "display size",
+        "Storage capacity": "storage capacity",
+    }
     if request.method == "POST":
         price_input = request.form.get("price_input", "")
         selected_items["price"] = int(price_input)
