@@ -87,7 +87,7 @@ def home():
             "GTX 1660": 1660,
             "Radeon 2000": 2000,
             "RTX 2040": 2040,
-            "Iris Xe": 2050,
+            "RTX 2050": 2050,
             "RTX 2060": 2060,
             "RTX 2070": 2070,
             "M1 Integrated Card": 2500,
@@ -142,6 +142,8 @@ def home():
         "Display Size": "display size",
         "Storage capacity": "storage capacity",
     }
+    order = {"Ascending order": "asc", "Descending order": "des"}
+
     if request.method == "POST":
         price_input = request.form.get("price_input", "")
         selected_items["price"] = int(price_input)
@@ -153,13 +155,14 @@ def home():
         method = request.form.get("dropdown_model", "")
         sort = request.form.get("dropdown_sort", "")
         num = request.form.get("dropdown_num", "")
+        ass = request.form.get("dropdown_order", "")
         if int(method) == 0:
             searched_items = one_hot.one_hot(
-                selected_items, int(limit), str(sort), int(num)
+                selected_items, int(limit), str(sort), int(num), str(ass)
             )
         else:
             searched_items = one_n.one_n(
-                selected_items, int(limit), str(sort), int(num)
+                selected_items, int(limit), str(sort), int(num), str(ass)
             )
     return render_template(
         "home.html",
@@ -169,6 +172,7 @@ def home():
         models=models,
         numbers=numbers,
         sorts=sorts,
+        orders=order,
     )
 
 

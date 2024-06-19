@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 
-def one_hot(selected_item, limit, sort, num):
+def one_hot(selected_item, limit, sort, num, ass):
     laptops = pd.read_csv("data/laptop.csv")
     recomm = []
 
@@ -68,7 +68,11 @@ def one_hot(selected_item, limit, sort, num):
             if product["instock"] == "yes":
                 recomm.append(product)
 
-    recomm = sorted(recomm, key=lambda x: x[sort])
+    if ass == "asc":
+        recomm = sorted(recomm, key=lambda x: x[sort])
+    else:
+        recomm = sorted(recomm, key=lambda x: x[sort], reverse=True)
+
     if num == -1:
         return recomm
     else:
