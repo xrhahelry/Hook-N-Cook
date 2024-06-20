@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 
-def one_n(selected_item, limit, sort, num, ass):
+def ordinal(selected_item, limit, sort, num, ass):
     laptops = pd.read_csv("data/laptop.csv")
     recomm = []
     non_categorical_cols = ["id", "price", "brand", "model"]

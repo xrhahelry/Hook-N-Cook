@@ -5,7 +5,7 @@ import plotly.express as px
 from flask import Blueprint, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 
-from model import one_hot, one_n
+from model import one_hot, ordinal
 
 from . import db
 from .models import User
@@ -130,7 +130,7 @@ def home():
         "Low Similarity": 4,
         "No Match": 8,
     }
-    models = {"One Hot": 0, "One N": 1}
+    models = {"One Hot": 0, "Custom Ordinal": 1}
     numbers = {"No limit": -1, "5": 5, "10": 10, "20": 20}
     sorts = {
         "Price": "price",
@@ -151,17 +151,17 @@ def home():
             selected_item = request.form.get(f"dropdown_{i}")
             if selected_item:
                 selected_items[cols[c]] = selected_item
-        limit = request.form.get("dropdown_level", "3")
-        method = request.form.get("dropdown_model", "")
-        sort = request.form.get("dropdown_sort", "")
-        num = request.form.get("dropdown_num", "")
-        ass = request.form.get("dropdown_order", "")
+        limit = request.form.get("dropdown_level") or "3"
+        method = request.form.get("dropdown_model") or "0"
+        sort = request.form.get("dropdown_sort") or "distance"
+        num = request.form.get("dropdown_num") or "-1"
+        ass = request.form.get("dropdown_order") or "asc"
         if int(method) == 0:
             searched_items = one_hot.one_hot(
                 selected_items, int(limit), str(sort), int(num), str(ass)
             )
         else:
-            searched_items = one_n.one_n(
+            searched_items = ordinal.ordinal(
                 selected_items, int(limit), str(sort), int(num), str(ass)
             )
     return render_template(
