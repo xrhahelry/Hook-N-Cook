@@ -33,14 +33,14 @@ def specs_scraper(driver):
         if fn[i].replace(".csv", "") in old:
             driver.get(link)
             if data.loc[data.id == fn[i].replace(".csv", ""), "image"].isna().item():
-                try:
-                    img = driver.find_element(
-                        By.XPATH,
-                        '//*[@id="module_item_gallery_1"]/div/div[1]/div[1]/img',
-                    ).get_attribute("src")
-                    data.loc[data.id == fn[i].replace(".csv", ""), "image"] = str(img)
-                except:
-                    pass
+                # try:
+                #     img = driver.find_element(
+                #         By.XPATH,
+                #         '//*[@id="module_item_gallery_1"]/div/div[1]/div[1]/img',
+                #     ).get_attribute("src")
+                #     data.loc[data.id == fn[i].replace(".csv", ""), "image"] = str(img)
+                # except:
+                #     pass
             print(i, "data/prices/" + fn[i])
             pp = pd.read_csv("data/prices/" + fn[i])
             data.loc[data.id == fn[i].replace(".csv", ""), "price"] = int(
