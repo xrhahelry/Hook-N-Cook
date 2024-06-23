@@ -1,36 +1,117 @@
-# Hook N Cook
-HookNCook is a laptop recommendation system that uses data from [daraz](https://daraz.com.np). HookNCook scrapes laptop specifications and daily price data. All data is stored in csv files for faster access and easier distribution. HookNCook’s recommendation models use simple vector distances to recommend laptops closest to the given parameters.
-## High level overview of the project structure
-#### 1. Scraper
-Web Scraper that scrapes daraz’s data using selenium. detail_scraper is used for data cleaning.
-#### 2. Data
-Actual data scraped by scrapers
-#### 3. Preparation
-Data cleaning and analysis using pandas and seaborn. We have also answered 4 research questions. You can take a look yourself but if don’t want to then the main conclusion is that the laptops with the best money and specs ratio can be found in 1,00,000 to 2,00,000 range after 2,00,000 you may want to consider buying a PC.
-#### 4. Model
-Recommendation models using pandas and numpy.
-#### 5. Hookncook
-Flask web app that handles the website frontend and backend. Flask also handles user authentication.
-#### 6. Instance
-Database instance used by flask for user authentication.
-## Datasets Schema
-There are 3 kinds of data scraped by the project.
-### urls.csv
-This acts like a map for the project to look for products online and offline and it also contains encrypted filenames later used as primary key.
-![](https://i.imgur.com/c4fYBrV.png)
-### laptop.csv
-Dataset of laptops available in daraz.
-![](https://i.imgur.com/Swjm3in.png)
-### prices/{filename}.csv
-Prices data of particular laptops.
+## Abstract
 
-![](https://i.imgur.com/RtFCqMF.png)
+"Hook-N-Cook" is a web scraping and product recommendation system designed for daraz.com.np, focusing initially on laptops but adaptable for other products. Leveraging web scraping with Selenium, the system acquires and cleans detailed laptop specifications and daily prices. A K-Nearest Neighbors (KNN) model is then applied to generate personalized recommendations based on user preferences. In today's vast and complex marketplace, consumers face daunting choices across various laptop specifications, brands, and prices, complicating informed purchasing decisions. "Hook-N-Cook" addresses this by providing users with tailored recommendations through automated data collection and analysis. By continuously tracking prices and employing KNN for recommendation generation, the system ensures up-to-date and relevant suggestions, easing the burden of product selection for consumers navigating Daraz's extensive e-commerce platform.
 
-Data of Dell vostro 3520.
-## Models
-In both models we only use the price and categorical columns of laptop.csv for recommendations. The other columns are used by flask for frontend and redirecting to daraz.
-In both models the price column is min-max normalized.
-1. One Hot: Categorical columns are one hot encoded.
-2. One N: Categorical columns are label encoded.
+## Introduction
 
-After the ecoding finishes we also encoded the user input and use numpy to find the vector distances and recommend the laptops closest to the input vector.
+“Hook-N-Cook” is a laptop recommendation system designed to recommend the best Laptop based on the user's needs. By harnessing the capabilities of web scraping, data analysis, and machine learning, Hook-N-Cook scrapes details of laptop specifications and daily prices data from daraz.com.np. It then processes the data to provide personalized recommendations. The system’s recommendation model is built on the concept of KNN where the euclidean distance is calculated between the user's input and laptops in the database. Then we recommend the laptops whose $d(x,y) < m, where m \in \mathbb{R}^{+}$.
+
+### Problem Statement
+
+The inability to keep track of real time data has become a major hassle in today’s world, especially in E-commerce Websites. Manual methods of price tracking are inefficient, labor-intensive, prone to errors. Also, the presence of misleading visual clutters in e-commerce websites make it hard to identify the actually good products. Therefore, there is a critical need for the development of an automated web scraper that can systematically extract product information from multiple online sources.
+
+### Motivation and Significance
+
+1. Quantify and Understand: In today’s ever-evolving world of e-commerce, digital marketplace are able to boost their service significantly. Similarly the competition to stay ahead of the latest price market and trends is equally challenging as well.
+2. Scalability: Creating a web scraper that can gather data of any product from popular e-commerce sites. The platform’s scalability, accuracy, and efficiency offer businesses a competitive edge by facilitating informed and data-driven decisions.
+3. Discover laptop trends: Across different brands, prices and specifications
+4. KNN Recommendation System: laptop recommendation based on specifications.
+
+## Related Works
+
+### [ScrapeHero’s Amazon Product Details and Pricing Scraper](https://www.scrapehero.com/marketplace/amazon-product-details/?utm_campaign=home_page_to_marketplace&utm_medium=menu&utm_source=homepage)
+
+ScrapeHero is a fully managed enterprise-grade web scraping service and they have a pre-built scraper for amazon. The data they scrape look something like this:
+![](https://lh7-us.googleusercontent.com/docsz/AD_4nXekVJwdISOPoChC8J32tQfTa_WEv2eeuJn9NUKC8UqAWG1rWItPAoq3Z6dWor8JmA1T15vn7aOc2CZEK04vM3pSxAsWg8_NQCdxfDhvglUYEwsTdtxycFfW2LAwDRF7MUsNXwteec2luRgD6wozSw0oFSlx?key=etauQO1RHvbR3-aNn0UXMQ)
+
+### [NYC Data Science Academy: Laptop Recommendation System](https://nycdatascience.com/blog/student-works/laptop-recommendation-system/)
+
+This is a similar project done by Jayce Jiang where he scrapes laptop data from Newegg, BestBuy and B&H Photo Video. In this project he visualizes the data to find trends in laptop specifications and prices. He also implements a KNN recommender by min-max normalization.
+
+## Methodology
+
+### Data Acquisition
+
+Our web scraper is divided into three distinct components: url scraper, price scraper and specs scraper. Each of these components is executed serially to optimize the use of computer resources.
+
+1. Url scraper
+   Url scraper can be said to be the most important component for the scraper itself as it guides the scraper to product pages from where it needs to scrape the data. More importantly, the url scraper creates the urls.csv which contains the url and unique id for each product. Id is the hash value of the url generated by the SHA256 hash function. The id is used as the file name for the storing prices and also as the primary key for the laptops database.
+   ![](https://i.imgur.com/wo7cdB5.png)
+2. Price scraper
+   Price scraper is executed after the url scraper it iteratively visits each url in the urls.csv and stores the price in the {id}.csv file which will be accessed by specs scraper later. In {id}.csv there are two columns for price namely actual price and discount price which are self explanatory. If we are able to scrape the price we also update the “instock” column in laptops.csv as “yes”.
+   ![](https://i.imgur.com/ISZAF75.png)
+3. Specs scraper
+   This is the most important scraping component as it scrapes the laptop specification. This also iteratively loops through the urls.csv to scrape the but before scraping it checks if the current url’s id already exists in the database if it does it only updates the price according to {id}.csv if the id doesn’t exist it scrapes the data and appends in to the dataset. Specs scraper doesn’t need to scrape daraz for every url in the urls.csv because we separated the price scraper which is the only data that would normally change for an already listed laptop so this makes the scraping process significantly faster.
+   ![](https://i.imgur.com/cPttsD1.png)
+
+### Data Cleaning and Analysis
+
+EDA is a crucial step in building a recommendation system. It involved understanding that data, cleaning it, and performing preliminary analysis
+
+1. Data Cleaning
+   In the Cleaning process, since we scraped from Daraz website we face many hurdles. The dataset consisted of many missing values, duplicates and outliers in the categorical columns that described the features of the Laptop. So while we referenced the name of Laptop as it contained sufficient information as well. Similarly we also manually cleaned to find the missing values as well
+2. Data Visualization
+   Before modeling it is essential to understand the data to uncover the insights and patterns. Below we have visualized the data distribution  and correlation matrix of different laptops based on their **price, processor, ram memory, storage capacity, display size, cpu cores and graphics card**.
+   ![](https://i.imgur.com/Vs2dX2d.png)
+   ![](https://i.imgur.com/SoXNTAh.png)
+
+### Modeling the Data
+
+For the modeling of the data we only used a select few columns from the laptops.csv that are relevant to the laptops value. The columns are: **price,processor,ram memory,display size,storage capacity,cpu cores,graphics card**.
+From these columns “price” is continuous data and the rest are categorical data. Here, as price is the only continuous data the “price” column is min-max normalized then decimal scaled by a factor of 2. This ensures that price doesn’t skew the KNN algorithm in a particular direction. After the “price” column is normalized we need to encode the rest of the columns. We can use two strategies for encoding the rest of the columns:
+
+1. One hot encoding
+   One-hot encoding is a technique used in machine learning and data processing to represent categorical variables as binary vectors. In this method, each category is represented by a vector where all elements are zero except for one element which is set to one, corresponding to the category's position in the vector. One-hot encoding ensures that each category is equally represented and that the distance between different categories is uniform.
+2. Custom ordinal encoding
+   The columns are ordinal so we create a mapping for each unique value in the columns that assigns a number from 1 to n in ascending order.
+   After the columns have been encoded and normalized we pass it to the KNN model which calculates the euclidean distance using formula:
+   ![](https://lh7-us.googleusercontent.com/docsz/AD_4nXclq0xwbcHjVBWnO6aD_k_yJpavjTUVCv-tJnadLDdd70DbEtTwb0H57giMDppOsIXffhB3PW_JWMPs2Ug5zecJkyCW11MwvsHjmrM0FZnrGwY9155tfmK5YVcvyifvLbRGF0eEAhN75-E1ZhiJYGHxteaI?key=etauQO1RHvbR3-aNn0UXMQ)
+   The complete model works as follows:
+   ![](https://lh7-us.googleusercontent.com/docsz/AD_4nXcm8JA734nGrPv-hg9rzllCYKMzqClPE7oBUBW2tXmiiAzbTsbjdZdmF4tFh4wMnP4kWWTN1X9syOzzRm60D2RsBsVj-5IF2IZWgBr2g-hLJfG3mVXBGDAtzyDFQ8PRwW17KvhgZfKDcpXPHr3koQe8N7eH?key=etauQO1RHvbR3-aNn0UXMQ)
+
+### User Interface and User Authentication
+
+The user interface is developed using Flask with user authentication. After the user is logged in they can select the required fields to recommend the Laptops. Each laptop that is recommended has almost similar features which if needed can also be tracked. Since our web scraper works on day-to-day data of laptops, the system also tracks the price changes of the Tracked Products. Below we can see different webpages of the User Interface.
+![](https://lh7-us.googleusercontent.com/docsz/AD_4nXeyuyeI8k8ovilauRb3T9nOC12KkfACuR3Ci0aF5lBknsNONcmuYiqzq-umQdGBrpfSwgczK3FLdgqRNW32Ei7GG6EFNrRFtUcZM39s1pBPv3B0ioTE-Iv4Lv0___jF3_l2jA2aV7PUxqML0cQhkheyJQTI?key=etauQO1RHvbR3-aNn0UXMQ)
+![](https://lh7-us.googleusercontent.com/docsz/AD_4nXftbbH1XnFSEdXp0qv5eeY7GIgEsI_-v5dNYrqZiWVRX8oX1zGUw1B_fXmXELAmvDr93DLuFHDmKLCejMKIFsqU8al1XP3AAEOCKyzSdfuq6quClDL0dPUuymoKxXuHn8RQYC1EN4g_rlgb-kJNLCNwJ3A?key=etauQO1RHvbR3-aNn0UXMQ)![](https://lh7-us.googleusercontent.com/docsz/AD_4nXfp0ZdoF3TkdRFwQ2279aXpFtwnaaGbBDWlHeN6_YWoazscuUlY5Ku9iaMNCUg58xkOtRKQdhkiicQqtrU0q6rfWlbbJxfSwBjUqhtxWdC8eKI-iuSP4-DRVZpgpQKFUWVZUMiwE7cgHBX84TUCf3GgzUWM?key=etauQO1RHvbR3-aNn0UXMQ)
+
+## Research and Discussion
+
+Hook-n-Cook project has achieved significant milestones, with its KNN based recommendation system to up-to-date price tracking. The project encompasses various phases of development that included project planning, data acquisition, EDA, modeling the recommender, and designing a friendly UI. The team effectively designed and implemented a ML along with web scraping, to develop a robust system that satisfies today’s user needs.
+
+### Features
+
+1. Real-Time Product and Price Tracking
+   The products and prices of the Laptops are updated in intervals of days, so users can keep track of day to day changes.
+2. KNN Recommendation System
+   The KNN based recommendation system ensures to recommend laptops by comparing key features of the user's choice. To ensure accuracy, categorical features were encoded into numerical values, and prices were normalized, allowing for effective distance calculation.
+3. User Friendly UI
+   The ui is designed to be easy to use even without prior knowledge about laptops as it provides dropdowns with possible values of parameters so the user can experiment with different specifications for their budget.
+4. Scraping Solution for Daraz
+   This project is capable of scraping the data of any product from daraz. After  which if we can clean the data the KNN model can generate recommendations.
+
+### Tools used
+
+1. Selenium
+2. Flask
+3. Pandas
+4. Numpy
+
+## Conclusion
+
+In conclusion, the Hook-N-Cook project has successfully delivered a comprehensive laptop recommendation system and price tracker for Daraz. Through effective web scraping, machine learning techniques, and a user-centric design, we have created a valuable tool for Customers or Business Salesmen. The main aim was to help users to take data driven decisions and help them keep track of changes effortlessly.
+
+### Limitations
+
+- Limited to Laptops category
+- Web Scraper not Autonomous
+- Static Database
+- Small Volume of data
+
+### Future Enhancement
+
+- Recommendation for extended product range
+- Implementing Dynamic Database
+- Multiple Site Scraping
+- Price Prediction Model
+
